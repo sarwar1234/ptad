@@ -1,0 +1,33 @@
+============================================================
+PTAD — Windows "hosts" file entry (local development only)
+============================================================
+
+WHERE THIS GOES:
+  C:\Windows\System32\drivers\etc\hosts
+
+HOW TO EDIT IT:
+  1. Open Notepad AS ADMINISTRATOR (right-click Notepad -> "Run as administrator").
+     You cannot save this file without admin rights.
+  2. File -> Open -> navigate to C:\Windows\System32\drivers\etc\
+  3. Change the file filter from "*.txt" to "All Files" so you can see "hosts".
+  4. Open "hosts", add the line below at the end, save.
+
+LINE TO ADD:
+  127.0.0.1    ptad.local
+
+AFTER SAVING:
+  - Restart Apache in the XAMPP Control Panel (Stop, then Start).
+  - Visit http://ptad.local in your browser.
+  - You should see a small JSON response confirming the bootstrap works,
+    e.g.: {"app": "...", "environment": "development", "status": "Step 2 bootstrap OK"}
+
+TROUBLESHOOTING:
+  - If you get "This site can't be reached": the hosts file entry didn't
+    save, or DNS cache needs flushing (run: ipconfig /flushdns in an
+    admin Command Prompt).
+  - If you get an Apache 403/500 error: check
+    C:\xampp\apache\logs\ptad-error.log (path set in the vhost file).
+  - If you get "Configuration error. Please contact the administrator.":
+    you haven't copied config/config.sample.php to config/config.php yet
+    (see next message from Claude for that step).
+============================================================

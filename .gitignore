@@ -1,0 +1,41 @@
+# ============================================================
+# PTAD — .gitignore
+# ============================================================
+
+# --- Secrets / environment-specific config ---
+config/config.php
+
+# --- Composer dependencies (installed via composer install) ---
+/vendor/
+
+# --- Raw source Excel data (large, and may contain pre-final data) ---
+/data/*
+!/data/.gitkeep
+!/data/.htaccess
+
+# --- Loader run logs / exceptions reports ---
+/loader/logs/*
+!/loader/logs/.gitkeep
+!/loader/logs/.htaccess
+
+# --- OS / editor junk ---
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# --- PHP / Composer artifacts ---
+composer.phar
+# NOTE: composer.lock is intentionally NOT ignored — it should be committed
+# so every environment (your laptop, later cPanel) installs identical package versions.
+
+# --- Local env files (if we add any later) ---
+.env
+.env.local
+
+# --- Backup / temp files ---
+*.bak
+*.tmp
+*~

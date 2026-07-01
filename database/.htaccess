@@ -1,0 +1,5 @@
+# PTAD — Defense in depth.
+# This folder must NEVER be inside the web root. This rule is a
+# safety net in case of misconfiguration — it should never be
+# the only thing protecting this folder.
+Require all denied

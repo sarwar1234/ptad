@@ -1,0 +1,69 @@
+# ============================================================
+# PTAD — public/.htaccess
+# This IS the web root. Every rule here matters.
+# ============================================================
+
+# --- 1. Disable directory listing ---
+Options -Indexes
+
+# --- 2. Hide Apache/PHP version info where possible ---
+ServerSignature Off
+
+# --- 3. Block access to dotfiles (.env, .git, .htaccess itself, etc.) ---
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+# --- 4. Block access to common sensitive/backup file extensions ---
+<FilesMatch "\.(sql|log|md|json|lock|bak|swp|ini|sh|env)$">
+    Require all denied
+</FilesMatch>
+
+# --- 5. Security headers (sent on every response) ---
+<IfModule mod_headers.c>
+    # Prevent MIME-sniffing
+    Header always set X-Content-Type-Options "nosniff"
+
+    # Prevent clickjacking (this app should never be iframed)
+    Header always set X-Frame-Options "DENY"
+
+    # Basic XSS protection for older browsers (modern browsers rely on CSP instead)
+    Header always set X-XSS-Protection "1; mode=block"
+
+    # Referrer policy — don't leak full URLs to third parties
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Restrict powerful browser features we don't use
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
+
+    # Content-Security-Policy — starts strict; we will loosen ONLY as needed
+    # (e.g. if we add a CDN for a JS/CSS library) and will document why.
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none';"
+
+    # HSTS — only meaningful over HTTPS (harmless locally over HTTP; will matter in production)
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+</IfModule>
+
+# --- 6. PHP hardening ---
+# NOTE: display_errors is intentionally NOT forced off here.
+# It's controlled in code by config/config.php's 'env' setting
+# (public/index.php bootstrap), so development mode can show
+# full errors locally while production mode hides them.
+<IfModule mod_php.c>
+    php_flag expose_php Off
+</IfModule>
+
+# --- 7. Front-controller routing ---
+# Any request that isn't a real file/folder (e.g. not in assets/) gets
+# routed to index.php, which will decide what to do based on the URL.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Allow direct access to real files (css/js/img) and the api/ folder
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Everything else -> index.php (front controller)
+    RewriteRule ^ index.php [L]
+</IfModule>

@@ -1,0 +1,46 @@
+# ============================================================
+# PTAD — Local Apache Virtual Host
+# ============================================================
+# WHERE THIS GOES:
+#   C:\xampp\apache\conf\extra\httpd-vhosts.conf
+#   (append this block to the end of that file)
+#
+# PREREQUISITE:
+#   Make sure this line is UNCOMMENTED in:
+#   C:\xampp\apache\conf\httpd.conf
+#     Include conf/extra/httpd-vhosts.conf
+#
+# NOTE: Adjust the path below ("C:/xampp/htdocs/ptad/public")
+# if your project folder is located somewhere else.
+# ============================================================
+
+<VirtualHost *:80>
+    ServerName ptad.local
+    DocumentRoot "C:/xampp/htdocs/ptad/public"
+
+    <Directory "C:/xampp/htdocs/ptad/public">
+        AllowOverride All
+        Require all granted
+    </Directory>
+
+    # Explicitly deny access to everything OUTSIDE public/, even though
+    # DocumentRoot already prevents it — belt and suspenders.
+    <Directory "C:/xampp/htdocs/ptad/config">
+        Require all denied
+    </Directory>
+    <Directory "C:/xampp/htdocs/ptad/src">
+        Require all denied
+    </Directory>
+    <Directory "C:/xampp/htdocs/ptad/loader">
+        Require all denied
+    </Directory>
+    <Directory "C:/xampp/htdocs/ptad/data">
+        Require all denied
+    </Directory>
+    <Directory "C:/xampp/htdocs/ptad/database">
+        Require all denied
+    </Directory>
+
+    ErrorLog "logs/ptad-error.log"
+    CustomLog "logs/ptad-access.log" combined
+</VirtualHost>
