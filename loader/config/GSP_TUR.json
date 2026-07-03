@@ -1,0 +1,19 @@
+{
+  "agreement": {
+    "code": "TUR_GSP", "short_name": "Türkiye GSP (Pakistan)",
+    "full_name": "Türkiye Generalised System of Preferences - Pakistan", "type": "GSP",
+    "source_workbook": "GSP_TUR_S.xlsx",
+    "list_type": "positive", "coverage": "partial", "staging": "none",
+    "anniversary_month": null, "anniversary_day": null,
+    "entry_into_force": null, "staging_horizon_yrs": null, "default_ceiling_pct": null
+  },
+  "format_family": "text_rate",
+  "tariff_sheets": [
+    { "sheet_name": "Tariff Preferences", "header_row": 10,
+      "import_country": "Türkiye", "member_country": null,
+      "columns": {"line_no":null,"hs_code":"A","hs_code_alt_hs8_parent":"B","description":"D","mfn_rate":"F","preferential_rate":"G","tariff_advantage":"H","exclusion_flag":null,"remarks":null,"source_reference":null,
+        "_extra_note":"Column C 'Official Turkish Description' - non-English duplicate description, same open question as the EAEU Russian-language column: keep or discard?"}
+    }
+  ],
+  "notes": "CONFIRMED per Schema Companion Guide's named special case: 'Turkey GSP - verify externally'. MFN present but preferential rate intentionally not stated in the module ('verify in official schedule' language expected in column G per the docs) -> RateParser correctly returns rate_kind='unspecified' for these via its VERIFY_PHRASES matching, never a fabricated number. Row 6's caution text confirms Chapters 42,43,50-60,61-63 are EXCLUDED for Pakistan - this is coverage_rules territory (Section 9B), NOT yet mapped to specific hs_prefix rows in this config since the exact 'Eligible/Excluded Goods List' sheet (if one exists separately in this workbook) was not located in this pass - FLAGGED for follow-up, same as the EAEU/Russia case. coverage set to 'partial' reflecting the documented verify-externally nature, per data_coverage enum definition ('some lines loaded; rest needs online verification')."
+}

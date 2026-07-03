@@ -1,0 +1,19 @@
+{
+  "agreement": {
+    "code": "EU_GSP", "short_name": "EU GSP+ (Pakistan)",
+    "full_name": "European Union Generalised Scheme of Preferences Plus - Pakistan", "type": "GSP",
+    "source_workbook": "GSP_EU_S.xlsx",
+    "list_type": "positive", "coverage": "full", "staging": "none",
+    "anniversary_month": null, "anniversary_day": null,
+    "entry_into_force": null, "staging_horizon_yrs": null, "default_ceiling_pct": null
+  },
+  "format_family": "text_rate",
+  "tariff_sheets": [
+    { "sheet_name": "Tariff Preferences", "header_row": 10,
+      "import_country": "European Union", "member_country": null,
+      "columns": {"line_no":null,"hs_code":"A","description":"B","mfn_rate":"C","preferential_rate":"D","tariff_advantage":"E","exclusion_flag":null,"remarks":"F","source_reference":"H",
+        "_extra_note": "Column G 'Caution' repeats the sheet-wide TARIC-verification warning on every row - FLAGGED: load into remarks appended, or discard as redundant boilerplate? Not decided here."}
+    }
+  ],
+  "notes": "Confirmed header row 10, 8 columns, by direct inspection. text_rate family per Loader Spec 'EU GSP+' example - rate_text preserved verbatim (e.g. 'Free p/st'), rate_kind='text_only' or 'free' via RateParser, effective_advalorem filled where derivable."
+}

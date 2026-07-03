@@ -1,0 +1,18 @@
+{
+  "agreement": {
+    "code": "CAN_GPT", "short_name": "Canada GPT (Pakistan)",
+    "full_name": "Canada General Preferential Tariff - Pakistan", "type": "GSP",
+    "source_workbook": "GSP_CAN_S.xlsx",
+    "list_type": "positive", "coverage": "full", "staging": "none",
+    "anniversary_month": null, "anniversary_day": null,
+    "entry_into_force": null, "staging_horizon_yrs": null, "default_ceiling_pct": null
+  },
+  "format_family": "text_rate",
+  "tariff_sheets": [
+    { "sheet_name": "Tariff Preferences", "header_row": 7,
+      "import_country": "Canada", "member_country": null,
+      "columns": {"line_no":"A","hs_code":"C","hs_code_alt_dotted":"B","description":"D","mfn_rate":"F","preferential_rate":"G","tariff_advantage":"H","exclusion_flag":null,"remarks":null,"source_reference":null}
+    }
+  ],
+  "notes": "CONFIRMED per Schema Companion Guide's named special case: 'Canada GSP - preferential equals MFN' (zero margin). Many lines show Base_Rate=Free, Preferential_Rate=Free with remark 'GPT same as MFN / no additional margin' embedded in Tariff_Advantage column (H) rather than a separate remarks column - so tariff_advantage doubles as the explanatory note here; no dedicated remarks/source_reference columns exist in this sheet, confirmed by direct inspection (only 8 columns A-H, last being Tariff_Advantage/note text). HS code: column C holds the pre-normalized digits-only code ('0101210000'), column B holds the dotted original ('0101.21.00.00') - hs_code points to C since it's already normalized-form, but raw form for hs_code_raw should still come from B per schema's requirement to preserve the exact original."
+}

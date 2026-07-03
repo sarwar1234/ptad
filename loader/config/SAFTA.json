@@ -1,0 +1,114 @@
+{
+  "agreement": {
+    "code": "SAFTA",
+    "short_name": "South Asian Free Trade Area (SAFTA)",
+    "full_name": "Agreement on South Asian Free Trade Area",
+    "type": "RTA",
+    "source_workbook": "RTA_SAFTA_S.xlsx",
+    "list_type": "negative",
+    "coverage": "full",
+    "staging": "none",
+    "anniversary_month": null,
+    "anniversary_day": null,
+    "entry_into_force": null,
+    "staging_horizon_yrs": null,
+    "default_ceiling_pct": 5.0
+  },
+
+  "format_family": "negative_list",
+
+  "notes_before_sheets": "CRITICAL — this is the inverted-logic module. Every row loaded from these sheets represents a SENSITIVE/EXCLUDED line (is_excluded = TRUE), NOT a granted concession. A product NOT listed here is eligible for the SAFTA ceiling (default_ceiling_pct above) computed at query time, per Loader Spec: 'Load listed rows with is_excluded = TRUE; eligibility for non-listed lines is computed at query time from the agreement's ceiling.' There is no mfn_rate or preferential_rate column in these sheets at all — confirmed from direct inspection (columns are Line_No, HS_Code, HS_Description, Sensitive_List_Exclusion, Remarks, Source_Reference only).",
+
+  "tariff_sheets": [
+    {
+      "sheet_name": "Tariff - Afghanistan",
+      "header_row": 9,
+      "import_country": "Afghanistan",
+      "member_country": "Afghanistan",
+      "columns": {
+        "line_no": "A", "hs_code": "B", "description": "C",
+        "mfn_rate": null, "preferential_rate": null, "tariff_advantage": null,
+        "exclusion_flag": "D", "remarks": "E", "source_reference": "F"
+      }
+    },
+    {
+      "sheet_name": "Tariff - Bangladesh",
+      "header_row": 9,
+      "import_country": "Bangladesh",
+      "member_country": "Bangladesh",
+      "columns": {
+        "line_no": "A", "hs_code": "B", "description": "C",
+        "mfn_rate": null, "preferential_rate": null, "tariff_advantage": null,
+        "exclusion_flag": "D", "remarks": "E", "source_reference": "F"
+      }
+    },
+    {
+      "sheet_name": "Tariff - Bhutan",
+      "header_row": 9,
+      "import_country": "Bhutan",
+      "member_country": "Bhutan",
+      "columns": {
+        "line_no": "A", "hs_code": "B", "description": "C",
+        "mfn_rate": null, "preferential_rate": null, "tariff_advantage": null,
+        "exclusion_flag": "D", "remarks": "E", "source_reference": "F"
+      }
+    },
+    {
+      "sheet_name": "Tariff - India",
+      "header_row": 9,
+      "import_country": "India",
+      "member_country": "India",
+      "columns": {
+        "line_no": "A", "hs_code": "B", "description": "C",
+        "mfn_rate": null, "preferential_rate": null, "tariff_advantage": null,
+        "exclusion_flag": "D", "remarks": "E", "source_reference": "F"
+      }
+    },
+    {
+      "sheet_name": "Tariff - Maldives",
+      "header_row": 9,
+      "import_country": "Maldives",
+      "member_country": "Maldives",
+      "columns": {
+        "line_no": "A", "hs_code": "B", "description": "C",
+        "mfn_rate": null, "preferential_rate": null, "tariff_advantage": null,
+        "exclusion_flag": "D", "remarks": "E", "source_reference": "F"
+      }
+    },
+    {
+      "sheet_name": "Tariff - Nepal",
+      "header_row": 9,
+      "import_country": "Nepal",
+      "member_country": "Nepal",
+      "columns": {
+        "line_no": "A", "hs_code": "B", "description": "C",
+        "mfn_rate": null, "preferential_rate": null, "tariff_advantage": null,
+        "exclusion_flag": "D", "remarks": "E", "source_reference": "F"
+      }
+    },
+    {
+      "sheet_name": "Tariff - Pakistan",
+      "header_row": 9,
+      "import_country": "Pakistan",
+      "member_country": "Pakistan",
+      "columns": {
+        "line_no": "A", "hs_code": "B", "description": "C",
+        "mfn_rate": null, "preferential_rate": null, "tariff_advantage": null,
+        "exclusion_flag": "D", "remarks": "E", "source_reference": "F"
+      }
+    },
+    {
+      "sheet_name": "Tariff - Sri Lanka",
+      "header_row": 9,
+      "import_country": "Sri Lanka",
+      "member_country": "Sri Lanka",
+      "columns": {
+        "line_no": "A", "hs_code": "B", "description": "C",
+        "mfn_rate": null, "preferential_rate": null, "tariff_advantage": null,
+        "exclusion_flag": "D", "remarks": "E", "source_reference": "F"
+      }
+    }
+  ],
+
+  "notes": "header_row=9 confirmed by direct inspection: rows 1-8 are title/instructions/search-demo content, row 9 is the real 'Line_No | HS_Code | HS_Description | Sensitive_List_Exclusion | Remarks | Source_Reference' header. All 8 member sheets share this identical layout. default_ceiling_pct=5.0 reflects the commonly-cited SAFTA 'up to 5 percentage-point concession' language seen in the sheet's own search-result example text; loader/business logic should treat this as the DEFAULT only — Section 3.2's agreement_members.member_ceiling_pct allows a future per-member override if a member's actual ceiling differs."
+}

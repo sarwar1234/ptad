@@ -1,0 +1,19 @@
+{
+  "agreement": {
+    "code": "AUS_ASTP", "short_name": "Australia ASTP/GSP (Pakistan)",
+    "full_name": "Australia System of Tariff Preferences - Pakistan", "type": "GSP",
+    "source_workbook": "GSP_AUS_S.xlsx",
+    "list_type": "positive", "coverage": "partial", "staging": "none",
+    "anniversary_month": null, "anniversary_day": null,
+    "entry_into_force": null, "staging_horizon_yrs": null, "default_ceiling_pct": null
+  },
+  "format_family": "text_rate",
+  "tariff_sheets": [
+    { "sheet_name": "Tariff Preferences", "header_row": 10,
+      "import_country": "Australia", "member_country": null,
+      "columns": {"line_no":null,"hs_code":"A","description":"B","mfn_rate":"C","preferential_rate":"D","tariff_advantage":"E","exclusion_flag":null,"remarks":"G","source_reference":"H",
+        "_extra_note":"Column F 'ASTP Treatment Basis' - same open question as UK's DCTS_Treatment_Basis column."}
+    }
+  ],
+  "notes": "CONFIRMED hybrid approach explicitly stated in row 6-8: 'combines a searchable tariff-line Section... and a dedicated official-verification Section with active ABF links... No non-Free MFN line was identified in the structured dataset used, so ABF live verification remains essential.' coverage set to 'partial' per this explicit statement, matching data_coverage enum's definition. This module ALSO has a 'Tariff Verification Links' sheet (verification_links table target) and a 'Tariff Data Note' sheet - NOT yet inspected for exact column layout in this pass, needed for Step 6 (verification_links loading) but not blocking this tariff_sheets config."
+}

@@ -1,0 +1,19 @@
+{
+  "agreement": {
+    "code": "UK_DCTS", "short_name": "UK DCTS Enhanced (Pakistan)",
+    "full_name": "United Kingdom Developing Countries Trading Scheme - Enhanced Preferences (Pakistan)", "type": "GSP",
+    "source_workbook": "GSP_UK_S.xlsx",
+    "list_type": "positive", "coverage": "full", "staging": "none",
+    "anniversary_month": null, "anniversary_day": null,
+    "entry_into_force": null, "staging_horizon_yrs": null, "default_ceiling_pct": null
+  },
+  "format_family": "text_rate",
+  "tariff_sheets": [
+    { "sheet_name": "Tariff Preferences", "header_row": 10,
+      "import_country": "United Kingdom", "member_country": null,
+      "columns": {"line_no":null,"hs_code":"A","description":"B","mfn_rate":"C","preferential_rate":"D","tariff_advantage":"E","exclusion_flag":null,"remarks":"G","source_reference":"H",
+        "_extra_note":"Column F 'DCTS_Treatment_Basis' has no direct schema field - FLAGGED: candidate for stated_eligibility or a new remarks-appended note; not decided."}
+    }
+  ],
+  "notes": "Confirmed header row 10, 8 columns, by direct inspection. Row 6 confirms duty expressions (compound/seasonal/conditional) are preserved verbatim and flagged in Remarks - consistent with RateParser's text_only fallback behavior, no special handling needed beyond what's already built."
+}

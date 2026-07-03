@@ -1,0 +1,39 @@
+{
+  "agreement": {
+    "code": "GSP_RUS_EAEU",
+    "short_name": "EAEU Unified Scheme of Tariff Preferences (Russia module)",
+    "full_name": "EAEU Unified System of Tariff Preferences (USTP) - covers Russia, Armenia, Belarus, Kazakhstan, Kyrgyzstan as per Module Register (one shared module, 5 arrangements)",
+    "type": "GSP",
+    "source_workbook": "GSP_RUS_S.xlsx",
+    "list_type": "positive",
+    "coverage": "full",
+    "staging": "none",
+    "anniversary_month": null,
+    "anniversary_day": null,
+    "entry_into_force": null,
+    "staging_horizon_yrs": null,
+    "default_ceiling_pct": null
+  },
+  "format_family": "text_rate",
+  "notes_before_sheets": "Per document B/Schema Companion Guide: Russia GSP uses RULE-BASED eligibility (coverage_rules table), not a per-line positive/negative flag alone. Column G 'Pakistan USTP Eligibility' is the manually-applied flag described in the Companion Guide as something that 'can drift from the legal rules' -> load into tariff_lines.stated_eligibility, and separately populate coverage_rules from the module's 'Eligible Goods List' sheet (NOT yet inspected in this pass - FLAGGED for follow-up: need to confirm exact sheet name/columns for the Eligible Goods List in this workbook before coverage_rules can be loaded). Confirmed identical column layout across GSP_ARM_S.xlsx, GSP_BLR_S.xlsx, GSP_KAZ_S.xlsx, GSP_KGZ_S.xlsx, GSP_RUS_S.xlsx by direct inspection - one config serves all 5 per Module Register's stated grouping.",
+  "tariff_sheets": [
+    {
+      "sheet_name": "Tariff Preferences",
+      "header_row": 10,
+      "import_country": "EAEU (Russia/Armenia/Belarus/Kazakhstan/Kyrgyzstan - see member_country per source file)",
+      "member_country": "SET PER SOURCE FILE: Russia | Armenia | Belarus | Kazakhstan | Kyrgyzstan",
+      "columns": {
+        "line_no": null,
+        "hs_code": "A",
+        "description": "C",
+        "mfn_rate": "F",
+        "preferential_rate": "H",
+        "tariff_advantage": null,
+        "exclusion_flag": null,
+        "remarks": null,
+        "source_reference": null,
+        "_extra_note": "Column B 'HS Formatted' and Column G 'Pakistan USTP Eligibility' and Column E 'UOM' have no direct schema field mapping decided yet - FLAGGED for review: should G map to stated_eligibility and E to a notes/remarks field, or be dropped as redundant? Column D 'Product Description (Russian source)' - FLAGGED: keep as product_desc alternate/secondary, or discard as non-English duplicate? Needs a decision from someone with domain knowledge, not assumed here."
+      }
+    }
+  ]
+}

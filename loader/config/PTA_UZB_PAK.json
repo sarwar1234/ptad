@@ -1,0 +1,20 @@
+{
+  "agreement": {
+    "code": "UZB_PAK", "short_name": "Uzbekistan-Pakistan PTA",
+    "full_name": "Preferential Trade Agreement between Uzbekistan and Pakistan", "type": "PTA",
+    "source_workbook": "PTA_UZB_PAK_S.xlsx",
+    "list_type": "positive", "coverage": "full", "staging": "none",
+    "anniversary_month": null, "anniversary_day": null,
+    "entry_into_force": null, "staging_horizon_yrs": null, "default_ceiling_pct": null
+  },
+  "format_family": "selective_concession",
+  "tariff_sheets": [
+    { "sheet_name": "Tariff - Imports into Uzbek", "header_row": 5,
+      "import_country": "Uzbekistan", "member_country": null,
+      "columns": {"line_no":"A","hs_code":"B","description":"C","mfn_rate":"D","preferential_rate":"E","tariff_advantage":"F","exclusion_flag":null,"remarks":"G","source_reference":"H"} },
+    { "sheet_name": "Tariff - Imports into Pakistan", "header_row": 5,
+      "import_country": "Pakistan", "member_country": null,
+      "columns": {"line_no":"A","hs_code":"B","description":"C","mfn_rate":"D","preferential_rate":"E","tariff_advantage":"F","exclusion_flag":null,"remarks":"G","source_reference":"H"} }
+  ],
+  "notes": "Confirmed selective_concession family per Schema Companion Guide's Uzbekistan example. Base_Rate column (D) holds compound text like 'CD 20%, but not less than USD 0.20/kg' -> loads to tariff_lines.mfn_text verbatim (mfn_kind='compound'); Preferential_Rate column (E) holds the CONCESSION MECHANISM as text ('20% decrease in CD', '100% decrease in CD') -> this is concession_type/concession_pct territory per schema Section 5, not a plain rate_value; Tariff_Advantage column (F) holds the OUTCOME ('CD 16%, but not less than USD 0.16/kg', '0% duty') -> maps to tariff_rates.outcome_text. FLAGGED: parsing 'X% decrease in CD' into a clean concession_pct number, and distinguishing which duty component (CD/ACD/RD) each row's concession applies to, requires a dedicated selective_concession format handler (not yet built - this is Step 7+ handler work) rather than the generic column-copy the config alone can express. This config documents WHERE the source text lives; the parsing LOGIC is deferred to that handler."
+}

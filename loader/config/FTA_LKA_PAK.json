@@ -1,0 +1,20 @@
+{
+  "agreement": {
+    "code": "LKA_PAK", "short_name": "Pakistan-Sri Lanka FTA (PSFTA)",
+    "full_name": "Pakistan-Sri Lanka Free Trade Agreement", "type": "FTA",
+    "source_workbook": "FTA_LKA_PAK_PSFTA_S.xlsx",
+    "list_type": "positive", "coverage": "full", "staging": "none",
+    "anniversary_month": null, "anniversary_day": null,
+    "entry_into_force": null, "staging_horizon_yrs": null, "default_ceiling_pct": null
+  },
+  "format_family": "simple_bilateral",
+  "tariff_sheets": [
+    { "sheet_name": "Tariff - Imports into Sri Lanka", "header_row": 5,
+      "import_country": "Sri Lanka", "member_country": null,
+      "columns": {"line_no":"A","hs_code":"B","description":"C","mfn_rate":"D","preferential_rate":"E","tariff_advantage":"F","exclusion_flag":null,"remarks":"G","source_reference":"H"} },
+    { "sheet_name": "Tariff - Imports into Pakistan", "header_row": 5,
+      "import_country": "Pakistan", "member_country": null,
+      "columns": {"line_no":"A","hs_code":"B","description":"C","mfn_rate":"D","preferential_rate":"E","tariff_advantage":"F","exclusion_flag":null,"remarks":"G","source_reference":"H"} }
+  ],
+  "notes": "Confirmed row 5 header, standard 8-column layout by direct inspection. Note: Preferential_Rate column can contain compound text (e.g. row 8 example '15% or Rs.90/=; 15% or Rs.120/' folded into Base_Rate with 'see remarks' in Tariff_Advantage) - RateParser's mixed/text_only handling applies; nothing extra needed in config."
+}

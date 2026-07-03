@@ -1,0 +1,27 @@
+{
+  "agreement": {
+    "code": "PTN", "short_name": "Protocol on Trade Negotiations (PTN)",
+    "full_name": "Protocol on Trade Negotiations among Developing Countries (GATT Framework)", "type": "RTA",
+    "source_workbook": "RTA_PTN_S.xlsx",
+    "list_type": "positive", "coverage": "full", "staging": "none",
+    "anniversary_month": null, "anniversary_day": null,
+    "entry_into_force": null, "staging_horizon_yrs": null, "default_ceiling_pct": null
+  },
+  "format_family": "multi_country_ldc",
+  "tariff_sheets": [
+    {
+      "sheet_name": "PTN CONSOLIDATED TARIFF",
+      "header_row": 11,
+      "import_country": null,
+      "member_country": "READ PER-ROW from column B (Country) - single flat table, not vertical blocks like GSTP",
+      "columns": {
+        "line_no": "A", "member_country_col": "B", "hs_code": "C", "description": "D",
+        "mfn_rate": "E", "preferential_rate": "F",
+        "tariff_advantage": null, "exclusion_flag": null,
+        "remarks": "G", "source_reference": null,
+        "_extra_note": "Column H 'CodeDigits_Helper' and Column I 'Search Match?' are Excel search-helper columns, per Loader Spec's hidden-column handling rule ('Helper columns ignored at load time') — even though these are VISIBLE (not hidden) columns here, they serve the identical Excel-search-formula purpose as the hidden helper columns found elsewhere, so they should be discarded the same way, not loaded."
+      }
+    }
+  ],
+  "notes": "CONFIRMED SIMPLER than GSTP: PTN is a single flat table with ONE header row (row 11) and a Country column (B) that changes value row-by-row — NOT the vertical repeating-block structure GSTP uses. Column C 'Tariff_Item_Number' confirmed to hold historical/pre-HS-style codes (e.g. '08.05', '2009192') — per Document B, description (column D) is the primary reference here too, same reasoning as GSTP. Only a single Preferential_Rate column exists (no LDC/non-LDC split, unlike SAPTA) — 'multi_country_ldc' family label is used per the Loader Spec's table grouping PTN with SAPTA/GSTP, but this file does NOT actually have separate LDC/non-LDC rate columns the way SAPTA does — FLAGGED: confirm whether PTN's single Preferential_Rate should default to rate_condition='standard' rather than 'ldc'/'non_ldc', since the source data doesn't distinguish."
+}

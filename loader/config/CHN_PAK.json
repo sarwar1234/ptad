@@ -1,0 +1,93 @@
+{
+  "agreement": {
+    "code": "CHN_PAK",
+    "short_name": "China-Pakistan FTA (CPFTA)",
+    "full_name": "China–Pakistan Free Trade Agreement (Phase II)",
+    "type": "FTA",
+    "source_workbook": "FTA_CHN_PAK_CPFTA_S.xlsx",
+    "list_type": "positive",
+    "coverage": "full",
+    "staging": "calendar_year",
+    "anniversary_month": null,
+    "anniversary_day": null,
+    "entry_into_force": "2020-01-01",
+    "staging_horizon_yrs": 10,
+    "default_ceiling_pct": null
+  },
+
+  "format_family": "phased_calendar_year",
+
+  "tariff_sheets": [
+    {
+      "sheet_name": "Tariff - Imports into China",
+      "header_row": 6,
+      "import_country": "China",
+      "member_country": null,
+
+      "columns": {
+        "line_no": "A",
+        "hs_code": "B",
+        "description": "C",
+        "mfn_rate": "D",
+        "preferential_rate": "E",
+        "tariff_advantage": "F",
+        "exclusion_flag": null,
+        "remarks": "G",
+        "source_reference": "H"
+      },
+
+      "raw_sheet": {
+        "_comment": "The visible sheet only shows ONE year's rate at a time (Excel formula-driven). The loader must read China_Raw instead to get every year, per Loader Spec 'Phased calendar-year' family.",
+        "sheet_name": "China_Raw",
+        "header_row": 1,
+        "hs_code_col": "B",
+        "description_col": "C",
+        "mfn_col": "D",
+        "base_rate_col": "E",
+        "category_col": "F",
+        "year_columns": {
+          "2020": "G", "2021": "H", "2022": "I", "2023": "J", "2024": "K",
+          "2025": "L", "2026": "M", "2027": "N", "2028": "O", "2029": "P",
+          "2030": "Q", "2031": "R", "2032": "S", "2033": "T", "2034": "U"
+        },
+        "remarks_col": "V"
+      }
+    },
+    {
+      "sheet_name": "Tariff - Imports into Pakistan",
+      "header_row": 6,
+      "import_country": "Pakistan",
+      "member_country": null,
+
+      "columns": {
+        "line_no": "A",
+        "hs_code": "B",
+        "description": "C",
+        "mfn_rate": "D",
+        "preferential_rate": "E",
+        "tariff_advantage": "F",
+        "exclusion_flag": null,
+        "remarks": "G",
+        "source_reference": "H"
+      },
+
+      "raw_sheet": {
+        "sheet_name": "Pakistan_Raw",
+        "header_row": 1,
+        "hs_code_col": "B",
+        "description_col": "C",
+        "mfn_col": "D",
+        "base_rate_col": "E",
+        "category_col": "F",
+        "year_columns": {
+          "2020": "G", "2021": "H", "2022": "I", "2023": "J", "2024": "K",
+          "2025": "L", "2026": "M", "2027": "N", "2028": "O", "2029": "P",
+          "2030": "Q", "2031": "R", "2032": "S", "2033": "T", "2034": "U"
+        },
+        "remarks_col": "V"
+      }
+    }
+  ],
+
+  "notes": "Confirmed from the deep scan: years 2030-2034 in China_Raw simply repeat the Year-10 (2029) rate — this is intentional per Sources_Notes ('China's tariff staging runs through Year-10; the Agreement Module carries the Year-10 rate through 2030-2034'), NOT a data error. The loader must load these repeated values as-is (they ARE the correct rate for those years), not skip or flag them. Also per Article 8(2) noted in Sources_Notes: if the live applied MFN is lower than the schedule rate, the lower MFN applies — this is a display/business-logic rule for the API layer, not something the loader needs to compute at load time; mfn_meaning='base_at_negotiation' is loaded as-is from the 2020 baseline column."
+}

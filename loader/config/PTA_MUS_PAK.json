@@ -1,0 +1,21 @@
+{
+  "agreement": {
+    "code": "MUS_PAK", "short_name": "Mauritius-Pakistan PTA (PMPTA)",
+    "full_name": "Pakistan-Mauritius Preferential Trade Agreement", "type": "PTA",
+    "source_workbook": "PTA_MUS_PAK_S.xlsx",
+    "list_type": "positive", "coverage": "full", "staging": "none",
+    "anniversary_month": null, "anniversary_day": null,
+    "entry_into_force": null, "staging_horizon_yrs": null, "default_ceiling_pct": null
+  },
+  "format_family": "simple_bilateral",
+  "rate_parsing": { "decimal_fraction_convention": true },
+  "tariff_sheets": [
+    { "sheet_name": "Tariff - Imports into Mauritius", "header_row": 5,
+      "import_country": "Mauritius", "member_country": null,
+      "columns": {"line_no":"A","hs_code":"B","description":"C","mfn_rate":"D","preferential_rate":"E","tariff_advantage":"F","exclusion_flag":null,"remarks":"G","source_reference":"H"} },
+    { "sheet_name": "Tariff - Imports into Pakistan", "header_row": 5,
+      "import_country": "Pakistan", "member_country": null,
+      "columns": {"line_no":"A","hs_code":"B","description":"C","mfn_rate":"D","preferential_rate":"E","tariff_advantage":"F","exclusion_flag":null,"remarks":"G","source_reference":"H"} }
+  ],
+  "notes": "RESOLVED: rates in this sheet are stored as raw decimal fractions (e.g. 0.3, 0.15) rather than '30%'/'15%' text. Fixed by adding an opt-in 'decimal_fraction_convention' flag to RateParser::parse() (see src/Helpers/RateParser.php) - when this config's rate_parsing.decimal_fraction_convention is true, the loader passes that flag so 0.3 correctly becomes 30%, while every other module's parsing is completely unaffected (verified by direct testing with and without the flag)."
+}

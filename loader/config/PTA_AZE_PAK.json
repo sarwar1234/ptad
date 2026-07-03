@@ -1,0 +1,20 @@
+{
+  "agreement": {
+    "code": "AZE_PAK", "short_name": "Azerbaijan-Pakistan PTA",
+    "full_name": "Preferential Trade Agreement between Azerbaijan and Pakistan", "type": "PTA",
+    "source_workbook": "PTA_AZE_PAK_S.xlsx",
+    "list_type": "positive", "coverage": "full", "staging": "none",
+    "anniversary_month": null, "anniversary_day": null,
+    "entry_into_force": null, "staging_horizon_yrs": null, "default_ceiling_pct": null
+  },
+  "format_family": "simple_bilateral",
+  "tariff_sheets": [
+    { "sheet_name": "Tariff - Imports into Azerbaija", "header_row": 5,
+      "import_country": "Azerbaijan", "member_country": null,
+      "columns": {"line_no":"A","hs_code":"B","description":"C","mfn_rate":"D","preferential_rate":"E","tariff_advantage":"F","exclusion_flag":null,"remarks":"G","source_reference":"H"} },
+    { "sheet_name": "Tariff - Imports into Pakistan", "header_row": 5,
+      "import_country": "Pakistan", "member_country": null,
+      "columns": {"line_no":"A","hs_code":"B","description":"C","mfn_rate":"D","preferential_rate":"E","tariff_advantage":"F","exclusion_flag":null,"remarks":"G","source_reference":"H"} }
+  ],
+  "notes": "Standard 8-column layout confirmed by direct inspection, header row 5, identical shape to Iran/Sri Lanka. NOTE: sheet name is literally 'Tariff - Imports into Azerbaija' (truncated, missing 'n') in the actual file - config uses the exact truncated name as it exists in the workbook, since sheet_name must match verbatim for openpyxl to find it."
+}

@@ -1,0 +1,55 @@
+{
+  "_schema_notes": "This is documentation, not a real config. Every module config in this folder follows this shape. Delete/ignore this file when loading — the loader skips any file starting with underscore.",
+
+  "agreement": {
+    "code": "string, matches agreements.code, e.g. 'IRN_PAK'",
+    "short_name": "string",
+    "full_name": "string",
+    "type": "FTA | PTA | RTA | MTA | GSP",
+    "source_workbook": "the .xlsx filename as it exists in /data",
+    "list_type": "positive | negative  (negative ONLY for SAFTA-style modules)",
+    "coverage": "full | partial | links_only",
+    "staging": "none | calendar_year | anniversary",
+    "anniversary_month": "int or null",
+    "anniversary_day": "int or null",
+    "entry_into_force": "YYYY-MM-DD or null",
+    "staging_horizon_yrs": "int or null",
+    "default_ceiling_pct": "number or null (SAFTA-style 'up to X%' ceiling)"
+  },
+
+  "format_family": "one of: simple_bilateral | phased_calendar_year | phased_multi_component | negative_list | multi_country_ldc | text_rate | links_only | selective_concession",
+
+  "tariff_sheets": [
+    {
+      "sheet_name": "exact sheet name in the workbook",
+      "header_row": "the row number (1-indexed) where column headers actually live — NOT row 1, since most sheets have title/instruction rows above the real header",
+      "import_country": "the market these lines apply to, e.g. 'Iran' — used to look up countries.id",
+      "member_country": "for multi-country modules only (SAPTA/GSTP/PTN/SAFTA): which member this sheet's rows belong to; null for bilaterals",
+
+      "columns": {
+        "line_no": "column letter or null if not present",
+        "hs_code": "column letter — REQUIRED",
+        "description": "column letter",
+        "mfn_rate": "column letter or null (some negative-list sheets have no MFN column)",
+        "preferential_rate": "column letter or null",
+        "tariff_advantage": "column letter or null",
+        "exclusion_flag": "column letter or null — ONLY for negative_list family (e.g. SAFTA's 'Sensitive_List_Exclusion')",
+        "remarks": "column letter or null",
+        "source_reference": "column letter or null"
+      },
+
+      "raw_sheet": {
+        "_comment": "ONLY present for phased_calendar_year / phased_multi_component families with a hidden year-by-year sheet (e.g. China_Raw).",
+        "sheet_name": "e.g. 'China_Raw'",
+        "header_row": 1,
+        "hs_code_col": "column letter",
+        "description_col": "column letter",
+        "mfn_col": "column letter",
+        "base_rate_col": "column letter",
+        "category_col": "column letter (staging_category, e.g. 'A-0','A-10')",
+        "year_columns": "map of {year: column_letter} for each phased year",
+        "remarks_col": "column letter"
+      }
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "agreement": {
+    "code": "GSTP", "short_name": "Global System of Trade Preferences (GSTP)",
+    "full_name": "Global System of Trade Preferences among Developing Countries", "type": "RTA",
+    "source_workbook": "RTA_GSTP_S.xlsx",
+    "list_type": "positive", "coverage": "full", "staging": "none",
+    "anniversary_month": null, "anniversary_day": null,
+    "entry_into_force": null, "staging_horizon_yrs": null, "default_ceiling_pct": null
+  },
+  "format_family": "multi_country_ldc",
+  "requires_custom_parsing": true,
+  "tariff_sheets": [
+    {
+      "sheet_name": "GSTP Consolidated Tariff",
+      "header_row": "REPEATING - see notes, NOT a single fixed row",
+      "import_country": null,
+      "member_country": "READ PER-BLOCK from column B (Country)",
+      "columns": {
+        "line_no": "A", "hs_code": "C", "description": "D",
+        "mfn_rate": "E", "preferential_rate": "F",
+        "tariff_advantage": null, "exclusion_flag": null,
+        "remarks": "G", "source_reference": null
+      }
+    }
+  ],
+  "notes": "CONFIRMED BY DIRECT INSPECTION — this sheet does NOT have one fixed header_row like every other module. It is a VERTICAL, REPEATING-BLOCK structure: 45 country sections stacked in one sheet, each starting with a title row ('GLOBAL SYSTEM OF TRADE PREFERENCES - CONCESSIONS GRANTED BY <COUNTRY>'), followed immediately by its OWN 'Line_No | Country | <code-col> | <desc-col> | Base_Rate | GSTP Concession(*) Rate of Duty | Remarks' header row, then that country's data rows, then the next country's title/header/data block, and so on (confirmed for Algeria, Argentina, Bangladesh, Benin... through Zimbabwe — 45 blocks total). CRITICAL FURTHER FINDING: column C's header label ITSELF changes per country block — 'Tariff_Item_Number' for most, but 'Tariff Item Number HS' (India), 'HS Codification' (Morocco), 'Tariff Item Number CCCN' (Malaysia/Philippines/South Korea/Tanzania), 'NCM (Based on HS96)' (Paraguay), 'NANDINA (Product Code)' (Venezuela) — all semantically the same field (a pre-HS or country-specific product code, per Document B's PTN/GSTP historical-nomenclature note) but with inconsistent labels. Column D's header similarly varies ('Product_Description' vs 'Description of Product(1)' vs 'DESCRIPTION OF PRODUCT'). THIS MODULE CANNOT BE LOADED WITH THE STANDARD single-header_row CONFIG SHAPE used by every other file. It requires a DEDICATED PARSING APPROACH in its format handler: scan down the sheet, detect each new title row (matches pattern 'CONCESSIONS GRANTED BY'), treat the row immediately after as that block's header (column positions are consistent A-G even though labels vary), and read that block's country name from column B rather than from the config. Flagging requires_custom_parsing=true so the loader knows this file cannot use the generic simple column-letter approach. Per Document B, description is the PRIMARY reference for these historical pre-HS codes since the codes themselves are not standard HS — hs_code_norm should still be computed by HsCode::normalize() from column C for whatever digits exist, but product_desc (column D) is what search should weight most heavily for this module, per the documented design intent."
+}

@@ -1,0 +1,24 @@
+{
+  "agreement": {
+    "code": "TUR_PAK", "short_name": "Türkiye-Pakistan PTA",
+    "full_name": "Preferential Trade Agreement between Türkiye and Pakistan", "type": "PTA",
+    "source_workbook": "PTA_TUR_PAK_S.xlsx",
+    "list_type": "positive", "coverage": "full", "staging": "anniversary",
+    "anniversary_month": 5, "anniversary_day": 1,
+    "entry_into_force": null, "staging_horizon_yrs": 11, "default_ceiling_pct": null
+  },
+  "format_family": "phased_multi_component",
+  "tariff_sheets": [
+    { "sheet_name": "Tariff - Imports into Türkiye", "header_row": 6,
+      "import_country": "Türkiye", "member_country": null,
+      "columns": {
+        "line_no":"A",
+        "hs_code":"C",
+        "hs_code_alt_12digit_turkish":"B",
+        "description":"D","mfn_rate":"E","preferential_rate":"F","tariff_advantage":"G",
+        "exclusion_flag":null,"remarks":"H","source_reference":null
+      }
+    }
+  ],
+  "notes": "CONFIRMED SPECIAL SHAPE by direct inspection - this differs from every other PTA config: (1) HS code for search/loading purposes should be Column C (8-digit FBR transposition to match Pakistan-side codes), NOT column B (12-digit Turkish GTIP) - column B stored as hs_code_alt_12digit_turkish and should ALSO populate hs_transpositions table per schema Section 9, since this workbook explicitly is the FBR 12<->8 digit transposition source referenced in the Schema Companion Guide. (2) Row 4 shows staging_horizon of 11 years (Year-1 through Year-11), not the 10 years assumed elsewhere - corrected here to staging_horizon_yrs=11. (3) anniversary_day/month = 1 May confirmed directly from row 4's remarks text ('each new tariff-year taking effect on 1st May'). (4) Remarks column (H) contains embedded rate-component text like 'Concession modality: %50 MFN; AFL in selected date: 11,5%' - this single visible sheet only shows ONE point-in-time rate (date-driven, Excel formula), same problem as China: FLAGGED - a hidden per-year/per-component raw sheet analogous to China_Raw was NOT found in this workbook during the original deep-scan (Turkey PTA showed no hidden sheets besides a standard Helper_Internal). This means the year-by-year CD/RD/ACD breakdown may only exist in the visible sheet's live-formula behavior, not as static hidden data - FLAGGED for follow-up investigation before this module can actually be loaded correctly; the config as written can only capture the CURRENTLY DISPLAYED single-date rate, not the full phased schedule the schema's tariff_rates table is designed to hold."
+}

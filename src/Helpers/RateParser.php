@@ -46,6 +46,7 @@ final class RateParser
         'na',
         'no concession',
         'sensitive',
+        'no gsp for pakistan',
     ];
 
     /**
@@ -62,6 +63,12 @@ final class RateParser
     ];
 
     /**
+     * @param bool $decimalFractionConvention Set true ONLY for modules
+     *   (confirmed so far: Mauritius PTA) whose workbook stores rates as
+     *   raw decimal fractions of 100 (e.g. 0.3 meaning 30%) rather than
+     *   the "30%" text every other module uses. When true, a bare
+     *   number under 1 is multiplied by 100 before being treated as a
+     *   percentage. Off by default so no other module's behaviour changes.
      * @return array{
      *   rate_kind: string,
      *   rate_value: ?float,
@@ -69,7 +76,7 @@ final class RateParser
      *   effective_advalorem: ?float
      * }
      */
-    public static function parse(?string $rawCell): array
+    public static function parse(?string $rawCell, bool $decimalFractionConvention = false): array
     {
         $text = trim((string) $rawCell);
 
@@ -124,6 +131,16 @@ final class RateParser
         //     case where we set rate_value, because it's unambiguous. ---
         if (preg_match('/^(\d+(?:\.\d+)?)\s*%?$/', $text, $m)) {
             $value = (float) $m[1];
+            // Mauritius-style workbooks store 30% as the raw decimal 0.3
+            // rather than the text "30%" every other module uses. Only
+            // convert when the caller has explicitly opted in for this
+            // module, and only when the value looks like a fraction
+            // (i.e. under 1) rather than a whole-number cell that
+            // genuinely means e.g. "0" (Free) in that convention too.
+            if ($decimalFractionConvention && $value > 0 && $value < 1) {
+                $value *= 100;
+                $text .= ' (converted from decimal-fraction source format)';
+            }
             return self::result('ad_valorem', $value, $text, $value);
         }
 
@@ -166,7 +183,9 @@ final class RateParser
     {
         // Common specific-duty markers seen across modules: currency
         // codes/symbols, or a "per unit" slash (e.g. "/kg", "/st", "p/st").
-        return (bool) preg_match('/(Rs\.?|PKR|USD|\$|EUR|€|p\/st|\/\s*(kg|ton|mt|litre|liter|unit|dozen|pair))/i', $text);
+        // CHF added after inspecting Switzerland/Liechtenstein GSP, which
+        // states specific duties exclusively in Swiss Francs.
+        return (bool) preg_match('/(Rs\.?|PKR|USD|\$|EUR|€|CHF|p\/st|\/\s*(kg|ton|mt|litre|liter|unit|dozen|pair))/i', $text);
     }
 
     private static function extractFirstPercent(string $text): ?float

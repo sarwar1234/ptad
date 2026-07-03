@@ -1,0 +1,20 @@
+{
+  "agreement": {
+    "code": "USA_GSP", "short_name": "USA GSP (Pakistan)",
+    "full_name": "United States Generalized System of Preferences - Pakistan", "type": "GSP",
+    "source_workbook": "GSP_USA_S.xlsx",
+    "list_type": "positive", "coverage": "full", "staging": "none",
+    "anniversary_month": null, "anniversary_day": null,
+    "entry_into_force": null, "staging_horizon_yrs": null, "default_ceiling_pct": null,
+    "status": "suspended"
+  },
+  "format_family": "text_rate",
+  "tariff_sheets": [
+    { "sheet_name": "Tariff Preferences", "header_row": 9,
+      "import_country": "United States", "member_country": null,
+      "columns": {"line_no":null,"hs_code":"A","description":"B","mfn_rate":"C","preferential_rate":"D","tariff_advantage":"E","exclusion_flag":null,"remarks":"G","source_reference":null,
+        "_extra_note":"Column F 'GSP_SPI' (Special Program Indicator, e.g. 'A') and Column H 'Operational_Notes' have no direct schema field mapping - FLAGGED, not decided."}
+    }
+  ],
+  "notes": "CRITICAL, CONFIRMED BY DIRECT INSPECTION: row 10 sample data explicitly states 'GSP benefits currently suspended due to program lapse; preserve SPI claim only as advised by CBP/USTR for possible retroactive renewal.' This means the ENTIRE module's preferential rates are provisional/inactive at present. Set agreements.status='suspended' accordingly (schema's status field default is 'in_force' - explicitly overridden here per the source data itself, not a guess). Preferential_Rate column text is itself conditional ('Free / 0% when U.S. GSP is legally in force') - RateParser will correctly fall into text_only/unspecified handling since it's not a clean number; this is CORRECT behavior given the program's suspended status, not a bug to fix."
+}

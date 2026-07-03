@@ -1,0 +1,38 @@
+{
+  "agreement": {
+    "code": "CHE_GSP",
+    "short_name": "Switzerland & Liechtenstein GSP (Pakistan)",
+    "full_name": "Switzerland and Liechtenstein Generalised System of Preferences - Pakistan",
+    "type": "GSP",
+    "source_workbook": "GSP_CHE_S.xlsx",
+    "list_type": "positive",
+    "coverage": "partial",
+    "staging": "none",
+    "anniversary_month": null,
+    "anniversary_day": null,
+    "entry_into_force": null,
+    "staging_horizon_yrs": null,
+    "default_ceiling_pct": null
+  },
+  "format_family": "text_rate",
+  "tariff_sheets": [
+    {
+      "sheet_name": "Tariff Preferences",
+      "header_row": 7,
+      "import_country": "Switzerland/Liechtenstein",
+      "member_country": null,
+      "columns": {
+        "line_no": null,
+        "hs_code": "A",
+        "description": "B",
+        "mfn_rate": "C",
+        "preferential_rate": "D",
+        "tariff_advantage": "E",
+        "exclusion_flag": null,
+        "remarks": null,
+        "source_reference": null
+      }
+    }
+  ],
+  "notes": "CONFIRMED BY DIRECT INSPECTION: rates are in Swiss Francs (CHF) per unit, NOT percentages (e.g. '120.00 CHF per unit', 'Free (0.00 CHF)') - this is a specific-duty-only module, RESOLVED: added 'CHF' to RateParser::hasCurrencyOrUnit() regex, verified by direct testing. coverage='partial' reflecting row 5's explicit instruction to verify in Swiss Tares before commercial use. Row 9 example ('MFN applies... no GSP for Pakistan') confirms some lines are LDC-only exclusions for Pakistan specifically - PARTIALLY RESOLVED: 'no gsp for pakistan' added to EXCLUDED_PHRASES, but since it appears mid-sentence in the real data (not at the start of the cell), it currently still falls through to rate_kind='specific' rather than 'excluded' - the original text is fully preserved regardless, so no data loss, just a minor classification nuance worth knowing about."
+}

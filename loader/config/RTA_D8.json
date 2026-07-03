@@ -1,0 +1,35 @@
+{
+  "agreement": {
+    "code": "D8", "short_name": "D-8 Preferential Trade Agreement",
+    "full_name": "Preferential Trade Agreement among D-8 Member States", "type": "RTA",
+    "source_workbook": "RTA_D8_S.xlsx",
+    "list_type": "positive", "coverage": "full", "staging": "none",
+    "anniversary_month": null, "anniversary_day": null,
+    "entry_into_force": null, "staging_horizon_yrs": null, "default_ceiling_pct": null
+  },
+  "format_family": "phased_calendar_year",
+  "notes_before_sheets": "CONFIRMED per Schema Companion Guide's named special case #5: 'D-8 PTA - per-member differing years and non-implementers.' Each member sheet below has its OWN set of staging years (confirmed by direct inspection, NOT assumed) and Bangladesh/Iran use a SINGLE standing rate (no year columns at all) rather than phased. Egypt and Nigeria are D-8 members but have NO tariff sheet in this workbook at all — confirmed by their absence from the sheet list — matching the Schema Companion Guide's description of them as 'not yet implemented' (agreement_members.status='not_implemented' for those two, added via Step 6's reference-data loading, with NO fabricated tariff_lines rows for them).",
+  "tariff_sheets": [
+    { "sheet_name": "Tariff - Bangladesh", "header_row": 9, "import_country": "Bangladesh", "member_country": "Bangladesh",
+      "columns": {"line_no":"A","hs_code":"B","description":"C","mfn_rate":"E","preferential_rate":"F","tariff_advantage":null,"exclusion_flag":null,"remarks":"G","source_reference":"H"},
+      "rate_structure": "single_standing_rate", "_note": "No year columns - single Preferential_Rate column confirmed, matches doc's 'single rate' member description." },
+    { "sheet_name": "Tariff - Iran", "header_row": 9, "import_country": "Iran", "member_country": "Iran",
+      "columns": {"line_no":"A","hs_code":"B","description":"C","mfn_rate":"E","preferential_rate":"F","tariff_advantage":null,"exclusion_flag":null,"remarks":"G","source_reference":"H"},
+      "rate_structure": "single_standing_rate" },
+    { "sheet_name": "Tariff - Indonesia", "header_row": 9, "import_country": "Indonesia", "member_country": "Indonesia",
+      "columns": {"line_no":"A","hs_code":"B","description":"C","mfn_rate":"E","remarks":"H","source_reference":"I","exclusion_flag":null,"tariff_advantage":null},
+      "rate_structure": "phased_years", "year_columns": {"2025":"F","2026":"G","2027":"H"},
+      "_note": "CORRECTED from earlier assumption of 2024-2027 (4 years) - direct inspection confirms only 3 year columns present: 2025, 2026, 2027 (F,G,H), with remarks/source shifted to columns I/J accordingly. Earlier '2024-27' figure was from the Schema Companion Guide's summary text and does not match this file's actual columns - the FILE is the source of truth here, guide text may be describing implementation-status language rather than literal column count." },
+    { "sheet_name": "Tariff - Malaysia", "header_row": 9, "import_country": "Malaysia", "member_country": "Malaysia",
+      "columns": {"line_no":"A","hs_code":"B","description":"C","mfn_rate":"F","remarks":null,"source_reference":"L","exclusion_flag":null,"tariff_advantage":null,
+        "_extra_note":"Column E is 'Unit' - no direct schema field, similar open question as other modules' unit columns."},
+      "rate_structure": "phased_years", "year_columns": {"2012":"G","2013":"H","2014":"I","2015":"J","2016":"K"} },
+    { "sheet_name": "Tariff - Pakistan", "header_row": 9, "import_country": "Pakistan", "member_country": "Pakistan",
+      "columns": {"line_no":"A","hs_code":"B","description":"C","mfn_rate":"E","remarks":"I","source_reference":"J","exclusion_flag":null,"tariff_advantage":null},
+      "rate_structure": "phased_years", "year_columns": {"2026":"F","2027":"G","2028":"H"} },
+    { "sheet_name": "Tariff - Türkiye", "header_row": 9, "import_country": "Türkiye", "member_country": "Türkiye",
+      "columns": {"line_no":"A","hs_code":"B","description":"C","mfn_rate":"E","remarks":"I","source_reference":"J","exclusion_flag":null,"tariff_advantage":null},
+      "rate_structure": "phased_years", "year_columns": {"2013":"F","2014":"G","2015":"H"} }
+  ],
+  "notes": "Every sheet also has column D 'HS_Version_Basis' (free text explaining the HS revision/source basis per member, e.g. 'HS 2012; source columns show 2013-2016 instalments') - FLAGGED, candidate for a notes/remarks-append field, not yet decided. Column Z 'SearchKey' present on every sheet is confirmed to be an Excel search-helper column (holds the same HS digits with no formatting) - correctly excluded from all column mappings above per the same rule applied to PTN's helper columns. Egypt and Nigeria: per Loader Spec's D-8 handling, these should still get agreement_members rows with status='not_implemented' during Step 6, even though they have no config entry here (they have no workbook sheet to read from)."
+}
