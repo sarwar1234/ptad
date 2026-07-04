@@ -58,17 +58,31 @@ final class Connection
                     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
                     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
                     PDO::ATTR_EMULATE_PREPARES   => false,
+                    // Ensures the connection itself uses utf8mb4, not just
+                    // the database's default charset.
                     PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES '{$db['charset']}'",
                 ]
             );
         } catch (PDOException $e) {
             if (Config::isProduction()) {
+                // Never leak host/credentials/DB structure to the browser
+                // in production. Log the real error server-side instead.
                 error_log('PTAD DB connection failed: ' . $e->getMessage());
-                http_response_code(500);
+                if (PHP_SAPI !== 'cli') {
+                    http_response_code(500);
+                }
                 die('A server error occurred. Please try again later.');
             }
 
-            http_response_code(500);
+            // In development, showing the real PDO error is genuinely
+            // useful for debugging local setup issues (wrong password,
+            // MySQL not running, wrong database name, etc.).
+            // http_response_code() only makes sense for web requests —
+            // calling it under the CLI SAPI (e.g. the loader) throws a
+            // PHP warning, so it's skipped there.
+            if (PHP_SAPI !== 'cli') {
+                http_response_code(500);
+            }
             die('Database connection failed: ' . $e->getMessage());
         }
 

@@ -1,26 +1,26 @@
 {
-    "name": "tdap/ptad",
-    "description": "PTAD - Preferential Trade Access Database (Pakistan). Plain PHP, MySQL-backed trade tariff intelligence portal for TDAP.",
-    "type": "project",
-    "license": "proprietary",
-    "require": {
-        "php": ">=8.1",
-        "ext-pdo": "*",
-        "ext-pdo_mysql": "*",
-        "ext-json": "*",
-        "ext-mbstring": "*",
-        "phpoffice/phpspreadsheet": "^2.1"
-    },
-    "autoload": {
-        "psr-4": {
-            "Ptad\\": "src/",
-            "PtadLoader\\": "loader/handlers/"
-        }
-    },
-    "config": {
-        "optimize-autoloader": true,
-        "sort-packages": true
-    },
-    "minimum-stability": "stable",
-    "prefer-stable": true
+  "name": "tdap/ptad",
+  "description": "PTAD - Preferential Trade Access Database (Pakistan). Plain PHP, MySQL-backed trade tariff intelligence portal for TDAP.",
+  "type": "project",
+  "license": "proprietary",
+  "require": {
+    "php": ">=8.1",
+    "ext-pdo": "*",
+    "ext-pdo_mysql": "*",
+    "ext-json": "*",
+    "ext-mbstring": "*",
+    "phpoffice/phpspreadsheet": "^2.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "Ptad\\": "src/",
+      "PtadLoader\\": "loader/"
+    }
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "sort-packages": true
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
 }
