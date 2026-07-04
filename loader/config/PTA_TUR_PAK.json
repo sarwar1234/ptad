@@ -1,24 +1,129 @@
 {
   "agreement": {
-    "code": "TUR_PAK", "short_name": "Türkiye-Pakistan PTA",
-    "full_name": "Preferential Trade Agreement between Türkiye and Pakistan", "type": "PTA",
+    "code": "TUR_PAK",
+    "short_name": "T\u00fcrkiye-Pakistan PTA",
+    "full_name": "Preferential Trade Agreement between T\u00fcrkiye and Pakistan",
+    "type": "PTA",
     "source_workbook": "PTA_TUR_PAK_S.xlsx",
-    "list_type": "positive", "coverage": "full", "staging": "anniversary",
-    "anniversary_month": 5, "anniversary_day": 1,
-    "entry_into_force": null, "staging_horizon_yrs": 11, "default_ceiling_pct": null
+    "list_type": "positive",
+    "coverage": "full",
+    "staging": "anniversary",
+    "anniversary_month": 5,
+    "anniversary_day": 1,
+    "entry_into_force": "2023-05-01",
+    "staging_horizon_yrs": 11,
+    "default_ceiling_pct": null
   },
   "format_family": "phased_multi_component",
   "tariff_sheets": [
-    { "sheet_name": "Tariff - Imports into Türkiye", "header_row": 6,
-      "import_country": "Türkiye", "member_country": null,
+    {
+      "sheet_name": "Tariff - Imports into T\u00fcrkiye",
+      "header_row": 6,
+      "import_country": "T\u00fcrkiye",
+      "member_country": null,
       "columns": {
-        "line_no":"A",
-        "hs_code":"C",
-        "hs_code_alt_12digit_turkish":"B",
-        "description":"D","mfn_rate":"E","preferential_rate":"F","tariff_advantage":"G",
-        "exclusion_flag":null,"remarks":"H","source_reference":null
+        "hs_code": "C",
+        "hs_code_12digit_turkish": "B",
+        "description": "D",
+        "remarks": "H",
+        "source_reference": null
+      },
+      "component_year_columns": {
+        "cd": {
+          "2023": "I",
+          "2024": "J",
+          "2025": "K",
+          "2026": "L",
+          "2027": "M",
+          "2028": "N",
+          "2029": "O",
+          "2030": "P",
+          "2031": "Q",
+          "2032": "R",
+          "2033": "S"
+        },
+        "rd": {
+          "2023": "T",
+          "2024": "U",
+          "2025": "V",
+          "2026": "W",
+          "2027": "X",
+          "2028": "Y",
+          "2029": "Z",
+          "2030": "AA",
+          "2031": "AB",
+          "2032": "AC",
+          "2033": "AD"
+        },
+        "acd": {
+          "2023": "AE",
+          "2024": "AF",
+          "2025": "AG",
+          "2026": "AH",
+          "2027": "AI",
+          "2028": "AJ",
+          "2029": "AK",
+          "2030": "AL",
+          "2031": "AM",
+          "2032": "AN",
+          "2033": "AO"
+        }
+      }
+    },
+    {
+      "sheet_name": "Tariff - Imports into Pakistan",
+      "header_row": 6,
+      "import_country": "Pakistan",
+      "member_country": null,
+      "columns": {
+        "hs_code": "B",
+        "hs_code_12digit_turkish": null,
+        "description": "C",
+        "remarks": "G",
+        "source_reference": null
+      },
+      "component_year_columns": {
+        "cd": {
+          "2023": "H",
+          "2024": "I",
+          "2025": "J",
+          "2026": "K",
+          "2027": "L",
+          "2028": "M",
+          "2029": "N",
+          "2030": "O",
+          "2031": "P",
+          "2032": "Q",
+          "2033": "R"
+        },
+        "rd": {
+          "2023": "S",
+          "2024": "T",
+          "2025": "U",
+          "2026": "V",
+          "2027": "W",
+          "2028": "X",
+          "2029": "Y",
+          "2030": "Z",
+          "2031": "AA",
+          "2032": "AB",
+          "2033": "AC"
+        },
+        "acd": {
+          "2023": "AD",
+          "2024": "AE",
+          "2025": "AF",
+          "2026": "AG",
+          "2027": "AH",
+          "2028": "AI",
+          "2029": "AJ",
+          "2030": "AK",
+          "2031": "AL",
+          "2032": "AM",
+          "2033": "AN"
+        }
       }
     }
   ],
-  "notes": "CONFIRMED SPECIAL SHAPE by direct inspection - this differs from every other PTA config: (1) HS code for search/loading purposes should be Column C (8-digit FBR transposition to match Pakistan-side codes), NOT column B (12-digit Turkish GTIP) - column B stored as hs_code_alt_12digit_turkish and should ALSO populate hs_transpositions table per schema Section 9, since this workbook explicitly is the FBR 12<->8 digit transposition source referenced in the Schema Companion Guide. (2) Row 4 shows staging_horizon of 11 years (Year-1 through Year-11), not the 10 years assumed elsewhere - corrected here to staging_horizon_yrs=11. (3) anniversary_day/month = 1 May confirmed directly from row 4's remarks text ('each new tariff-year taking effect on 1st May'). (4) Remarks column (H) contains embedded rate-component text like 'Concession modality: %50 MFN; AFL in selected date: 11,5%' - this single visible sheet only shows ONE point-in-time rate (date-driven, Excel formula), same problem as China: FLAGGED - a hidden per-year/per-component raw sheet analogous to China_Raw was NOT found in this workbook during the original deep-scan (Turkey PTA showed no hidden sheets besides a standard Helper_Internal). This means the year-by-year CD/RD/ACD breakdown may only exist in the visible sheet's live-formula behavior, not as static hidden data - FLAGGED for follow-up investigation before this module can actually be loaded correctly; the config as written can only capture the CURRENTLY DISPLAYED single-date rate, not the full phased schedule the schema's tariff_rates table is designed to hold."
+  "notes": "CORRECTED from the earlier flag raised in Step 5: the full year-by-year phased schedule DOES exist directly on the visible sheets (confirmed by inspecting the full column width, A1:BD272 - the earlier inspection pass only looked at the first ~8 columns and wrongly concluded no raw schedule existed). Three duty components confirmed: CD (Customs Duty), a middle component labeled 'AFL' on the T\u00fcrkiye-side sheet but 'RD' (Regulatory Duty) on the Pakistan-side sheet - same concept, different label between the two sides of the same workbook, mapped to component='rd' in both cases for consistency with the schema's cd/rd/acd enum. ACD (Additional Customs Duty) is the third component on both sides. 11 years confirmed (2023-2033), matching entry_into_force=2023-05-01 and staging_horizon_yrs=11 (corrected from an earlier assumed 10). Anniversary date 1 May confirmed directly from the sheet's own date-selector instructions. Columns AP-AS on both sheets ('base','show_afl','show_acd','cd_mod','acd_mod','extra','has_rd','has_acd') are Excel UI helper/toggle columns for the date-selector feature, not real trade data - correctly excluded from the column mapping, same treatment as other files' search-helper columns."
 }

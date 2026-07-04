@@ -29,6 +29,8 @@ use PtadLoader\Handlers\TextRateHandler;
 use PtadLoader\Handlers\MultiCountryLdcHandler;
 use PtadLoader\Handlers\PhasedCalendarYearHandler;
 use PtadLoader\Handlers\SelectiveConcessionHandler;
+use PtadLoader\Handlers\PhasedMultiComponentHandler;
+use PtadLoader\Handlers\NegativeListHandler;
 
 if (php_sapi_name() !== 'cli') {
     http_response_code(403);
@@ -141,6 +143,8 @@ function runModule(string $moduleCode): array
         'multi_country_ldc' => new MultiCountryLdcHandler($moduleCode, $config),
         'phased_calendar_year' => new PhasedCalendarYearHandler($moduleCode, $config),
         'selective_concession' => new SelectiveConcessionHandler($moduleCode, $config),
+        'phased_multi_component' => new PhasedMultiComponentHandler($moduleCode, $config),
+        'negative_list' => new NegativeListHandler($moduleCode, $config),
         default => throw new \RuntimeException("No handler implemented yet for format_family '{$family}' (module {$moduleCode})."),
     };
 
