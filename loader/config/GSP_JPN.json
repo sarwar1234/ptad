@@ -1,18 +1,43 @@
 {
   "agreement": {
-    "code": "JPN_GSP", "short_name": "Japan GSP (Pakistan)",
-    "full_name": "Japan Generalised System of Preferences - Pakistan", "type": "GSP",
+    "code": "JPN_GSP",
+    "short_name": "Japan GSP (Pakistan)",
+    "full_name": "Japan Generalised System of Preferences - Pakistan",
+    "type": "GSP",
     "source_workbook": "GSP_JPN_S.xlsx",
-    "list_type": "positive", "coverage": "partial", "staging": "none",
-    "anniversary_month": null, "anniversary_day": null,
-    "entry_into_force": null, "staging_horizon_yrs": null, "default_ceiling_pct": null
+    "list_type": "positive",
+    "coverage": "partial",
+    "staging": "none",
+    "anniversary_month": null,
+    "anniversary_day": null,
+    "entry_into_force": null,
+    "staging_horizon_yrs": null,
+    "default_ceiling_pct": null
   },
   "format_family": "text_rate",
   "tariff_sheets": [
-    { "sheet_name": "Tariff Preferences", "header_row": 10,
-      "import_country": "Japan", "member_country": null,
-      "columns": {"line_no":null,"hs_code":"A","description":"B","mfn_rate":"C","preferential_rate":"D","tariff_advantage":"E","exclusion_flag":null,"remarks":"G","source_reference":"H",
-        "_extra_note":"Column F 'GSP Treatment Basis' - same open pattern as other modules' treatment-basis columns."}
+    {
+      "sheet_name": "Tariff Preferences",
+      "header_row": 10,
+      "import_country": "Japan",
+      "member_country": null,
+      "columns": {
+        "line_no": null,
+        "hs_code": "A",
+        "description": "B",
+        "mfn_rate": "C",
+        "preferential_rate": "D",
+        "tariff_advantage": "E",
+        "exclusion_flag": null,
+        "remarks": "G",
+        "source_reference": "H"
+      },
+      "unmapped_columns": [
+        {
+          "letter": "F",
+          "label": "GSP Treatment Basis"
+        }
+      ]
     }
   ],
   "notes": "CORRECTION to earlier assumption: this workbook DOES have a populated 'Tariff Preferences' sheet (3,726 rows, header row 10, standard 8-column layout) - it is NOT purely links-only as previously assumed based on the Loader Spec's general 'Japan = links-only' example. Direct inspection shows real tariff data present. coverage set to 'partial' (not 'links_only') to reflect what's actually in the file, per row 6's caution that 'Japan operates ceiling limits and an escape clause... preferences may be reduced or suspended by Cabinet Order' - meaning the loaded rates are indicative and require live verification, matching 'partial' semantics rather than 'links_only'. This module ALSO has a 'Tariff Guidance' sheet not yet inspected - needed for verification_links loading in a later step. FLAGGED: this correction should be communicated to whoever relies on the earlier 'Japan=links_only' characterization from Document 4's example, since actual file inspection shows otherwise."

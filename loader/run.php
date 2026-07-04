@@ -14,10 +14,18 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+// This is a CLI-only batch script that can process 25+ multi-megabyte
+// Excel files in one run — raising the memory limit here is safe and
+// has NO effect on the website's PHP processes (php.ini's web-facing
+// memory_limit for Apache/PHP-FPM is untouched; this ini_set only
+// applies to this one CLI process).
+ini_set('memory_limit', '2048M');
+
 use Ptad\Config;
 use PtadLoader\ReferenceLoader;
 use PtadLoader\Support\ModuleConfig;
 use PtadLoader\Handlers\SimpleBilateralHandler;
+use PtadLoader\Handlers\TextRateHandler;
 
 if (php_sapi_name() !== 'cli') {
     http_response_code(403);
@@ -126,6 +134,7 @@ function runModule(string $moduleCode): array
 
     $handler = match ($family) {
         'simple_bilateral' => new SimpleBilateralHandler($moduleCode, $config),
+        'text_rate' => new TextRateHandler($moduleCode, $config),
         default => throw new \RuntimeException("No handler implemented yet for format_family '{$family}' (module {$moduleCode})."),
     };
 

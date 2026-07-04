@@ -31,7 +31,8 @@
         "exclusion_flag": null,
         "remarks": null,
         "source_reference": null
-      }
+      },
+      "unmapped_columns": []
     }
   ],
   "notes": "CONFIRMED BY DIRECT INSPECTION: rates are in Swiss Francs (CHF) per unit, NOT percentages (e.g. '120.00 CHF per unit', 'Free (0.00 CHF)') - this is a specific-duty-only module, RESOLVED: added 'CHF' to RateParser::hasCurrencyOrUnit() regex, verified by direct testing. coverage='partial' reflecting row 5's explicit instruction to verify in Swiss Tares before commercial use. Row 9 example ('MFN applies... no GSP for Pakistan') confirms some lines are LDC-only exclusions for Pakistan specifically - PARTIALLY RESOLVED: 'no gsp for pakistan' added to EXCLUDED_PHRASES, but since it appears mid-sentence in the real data (not at the start of the cell), it currently still falls through to rate_kind='specific' rather than 'excluded' - the original text is fully preserved regardless, so no data loss, just a minor classification nuance worth knowing about."

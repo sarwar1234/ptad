@@ -1,18 +1,51 @@
 {
   "agreement": {
-    "code": "NZL_GSP", "short_name": "New Zealand GSP (Pakistan)",
-    "full_name": "New Zealand Generalised System of Preferences - Pakistan (LDC treatment)", "type": "GSP",
+    "code": "NZL_GSP",
+    "short_name": "New Zealand GSP (Pakistan)",
+    "full_name": "New Zealand Generalised System of Preferences - Pakistan (LDC treatment)",
+    "type": "GSP",
     "source_workbook": "GSP_NZL_S.xlsx",
-    "list_type": "positive", "coverage": "full", "staging": "none",
-    "anniversary_month": null, "anniversary_day": null,
-    "entry_into_force": null, "staging_horizon_yrs": null, "default_ceiling_pct": null
+    "list_type": "positive",
+    "coverage": "full",
+    "staging": "none",
+    "anniversary_month": null,
+    "anniversary_day": null,
+    "entry_into_force": null,
+    "staging_horizon_yrs": null,
+    "default_ceiling_pct": null
   },
   "format_family": "text_rate",
   "tariff_sheets": [
-    { "sheet_name": "Tariff Preferences", "header_row": 9,
-      "import_country": "New Zealand", "member_country": null,
-      "columns": {"line_no":null,"hs_code":"A","description":"D","mfn_rate":"E","preferential_rate":"F","tariff_advantage":"G","exclusion_flag":null,"remarks":null,"source_reference":null,
-        "_extra_note":"Column B 'Statistical Key' and Column C 'Unit' and Column H 'Pakistan GSP Status' have no direct schema mapping decided - H in particular looks like it should map to stated_eligibility but not confirmed."}
+    {
+      "sheet_name": "Tariff Preferences",
+      "header_row": 9,
+      "import_country": "New Zealand",
+      "member_country": null,
+      "columns": {
+        "line_no": null,
+        "hs_code": "A",
+        "description": "D",
+        "mfn_rate": "E",
+        "preferential_rate": "F",
+        "tariff_advantage": "G",
+        "exclusion_flag": null,
+        "remarks": null,
+        "source_reference": null
+      },
+      "unmapped_columns": [
+        {
+          "letter": "B",
+          "label": "Statistical Key"
+        },
+        {
+          "letter": "C",
+          "label": "Unit"
+        },
+        {
+          "letter": "H",
+          "label": "Pakistan GSP Status"
+        }
+      ]
     }
   ],
   "notes": "CONFIRMED: Pakistan explicitly treated as LDC beneficiary per row 8's common note ('Pakistan is confirmed... as a Less Developed Country (LDC)... use the LDC preferential tariff treatment'). This means tariff_rates.condition should default to 'ldc' for this module's rows rather than the schema's general 'standard' default - FLAGGED as a per-module override the loader/handler needs to apply, not something the generic config field expresses on its own (no 'default_rate_condition' field exists yet in the config schema - may need to be added in a schema revision, or handled as a fixed rule inside the text_rate handler specifically for this module code)."

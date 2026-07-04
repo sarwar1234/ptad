@@ -13,29 +13,39 @@ use PtadLoader\Support\ExceptionsLog;
 
 /**
  * ============================================================
- * PTAD — Simple Bilateral Format Handler
+ * PTAD — Text Rate Format Handler
  * ============================================================
- * Handles the "simple_bilateral" format family per Loader Spec
- * Table B3: one standing tariff_rates row per line (no phasing,
- * no negative-list, no multi-country split). Applies to Iran,
- * Sri Lanka, Malaysia, Azerbaijan, Indonesia, Türkiye PTA's
- * (partial, see its config notes), Uzbekistan (also uses this
- * as a base before selective_concession specifics are added).
+ * Handles the "text_rate" format family (per Loader Spec Table B3
+ * "Text-rate / TARIC" row) — covers all GSP modules (Australia,
+ * Canada, Switzerland, EU, Japan, Norway, New Zealand, the 5 EAEU
+ * modules, Türkiye GSP, UK, USA). Preserves rate text verbatim
+ * (e.g. "Free p/st", "MOP (50%)") via RateParser rather than
+ * forcing a fabricated number.
  *
- * RE-RUNNABLE: wipes this agreement's existing tariff_lines
- * (which cascades to tariff_rates via FK) before inserting fresh,
- * per Loader Spec B8 — so re-running after an Excel edit is safe.
+ * DIFFERENCES from SimpleBilateralHandler:
+ *   - Single-country modules only (one granting country each,
+ *     not two-directional like the bilaterals) — so only ONE
+ *     tariff_sheets entry per config, not two.
+ *   - Per-sheet source_workbook override supported, since the
+ *     5 EAEU modules (Russia/Armenia/Belarus/Kazakhstan/Kyrgyzstan)
+ *     share one config SHAPE but are 5 separate real files — each
+ *     of those 5 configs sets its own agreement.source_workbook.
+ *   - "unmapped_columns" support: any column a config flags here
+ *     is appended into remarks (labeled with its original header)
+ *     per the project's Unmapped Column Policy — NOTHING from the
+ *     sheet is discarded, even columns with no dedicated schema
+ *     field.
+ *   - agreements.status is honoured from config (e.g. USA GSP is
+ *     explicitly 'suspended' per its source data).
  * ============================================================
  */
-final class SimpleBilateralHandler
+final class TextRateHandler
 {
     private PDO $pdo;
     private array $config;
     private string $moduleCode;
     private ExceptionsLog $exceptions;
-
     private int $agreementId;
-    /** @var array<string,int> country name (canonical) => countries.id */
     private array $countryIdCache = [];
 
     public function __construct(string $moduleCode, array $config)
@@ -70,10 +80,10 @@ final class SimpleBilateralHandler
         $this->exceptions->close();
 
         return [
-            'agreement_id'      => $this->agreementId,
-            'lines_loaded'      => $totalLoaded,
-            'exceptions_count'  => $this->exceptions->count(),
-            'exceptions_path'   => $this->exceptions->path(),
+            'agreement_id'     => $this->agreementId,
+            'lines_loaded'     => $totalLoaded,
+            'exceptions_count' => $this->exceptions->count(),
+            'exceptions_path'  => $this->exceptions->path(),
         ];
     }
 
@@ -90,36 +100,23 @@ final class SimpleBilateralHandler
                      :list_type, :coverage, :staging, :anniversary_month, :anniversary_day,
                      :entry_into_force, :staging_horizon_yrs, :default_ceiling_pct, :status)
                 ON DUPLICATE KEY UPDATE
-                    short_name = VALUES(short_name),
-                    full_name = VALUES(full_name),
-                    source_workbook = VALUES(source_workbook),
-                    list_type = VALUES(list_type),
-                    coverage = VALUES(coverage),
-                    staging = VALUES(staging),
-                    anniversary_month = VALUES(anniversary_month),
-                    anniversary_day = VALUES(anniversary_day),
+                    short_name = VALUES(short_name), full_name = VALUES(full_name),
+                    source_workbook = VALUES(source_workbook), list_type = VALUES(list_type),
+                    coverage = VALUES(coverage), staging = VALUES(staging),
+                    anniversary_month = VALUES(anniversary_month), anniversary_day = VALUES(anniversary_day),
                     entry_into_force = VALUES(entry_into_force),
                     staging_horizon_yrs = VALUES(staging_horizon_yrs),
-                    default_ceiling_pct = VALUES(default_ceiling_pct),
-                    status = VALUES(status),
+                    default_ceiling_pct = VALUES(default_ceiling_pct), status = VALUES(status),
                     id = LAST_INSERT_ID(id)";
 
         $stmt = $this->pdo->prepare($sql);
         $stmt->execute([
-            ':code'                 => $a['code'],
-            ':short_name'           => $a['short_name'],
-            ':full_name'            => $a['full_name'],
-            ':type'                 => $a['type'],
-            ':source_workbook'      => $a['source_workbook'],
-            ':list_type'            => $a['list_type'],
-            ':coverage'             => $a['coverage'],
-            ':staging'              => $a['staging'],
-            ':anniversary_month'    => $a['anniversary_month'],
-            ':anniversary_day'      => $a['anniversary_day'],
-            ':entry_into_force'     => $a['entry_into_force'],
-            ':staging_horizon_yrs'  => $a['staging_horizon_yrs'],
-            ':default_ceiling_pct'  => $a['default_ceiling_pct'],
-            ':status'               => $a['status'] ?? 'in_force',
+            ':code' => $a['code'], ':short_name' => $a['short_name'], ':full_name' => $a['full_name'],
+            ':type' => $a['type'], ':source_workbook' => $a['source_workbook'],
+            ':list_type' => $a['list_type'], ':coverage' => $a['coverage'], ':staging' => $a['staging'],
+            ':anniversary_month' => $a['anniversary_month'], ':anniversary_day' => $a['anniversary_day'],
+            ':entry_into_force' => $a['entry_into_force'], ':staging_horizon_yrs' => $a['staging_horizon_yrs'],
+            ':default_ceiling_pct' => $a['default_ceiling_pct'], ':status' => $a['status'] ?? 'in_force',
         ]);
 
         return (int) $this->pdo->lastInsertId();
@@ -127,29 +124,25 @@ final class SimpleBilateralHandler
 
     private function upsertMembers(): void
     {
-        $countryNames = [];
-        foreach ($this->config['tariff_sheets'] as $sheet) {
-            if (!empty($sheet['import_country'])) {
-                $countryNames[] = $sheet['import_country'];
-            }
-        }
-        $countryNames = array_unique($countryNames);
-
         $sql = "INSERT INTO agreement_members (agreement_id, country_id, role, status)
-                VALUES (:agreement_id, :country_id, :role, 'implemented')
+                VALUES (:agreement_id, :country_id, 'party', 'implemented')
                 ON DUPLICATE KEY UPDATE role = VALUES(role)";
         $stmt = $this->pdo->prepare($sql);
 
-        foreach ($countryNames as $name) {
-            $countryId = $this->resolveCountryId($name);
-            if ($countryId === null) {
-                continue; // logged inside resolveCountryId
+        foreach ($this->config['tariff_sheets'] as $sheet) {
+            if (empty($sheet['import_country'])) {
+                continue;
             }
-            $stmt->execute([
-                ':agreement_id' => $this->agreementId,
-                ':country_id'   => $countryId,
-                ':role'         => 'party',
-            ]);
+            // Bloc/multi-word entries like "Switzerland/Liechtenstein" are
+            // split and each part resolved separately, so both get a
+            // proper agreement_members row rather than one failed lookup.
+            foreach (explode('/', $sheet['import_country']) as $part) {
+                $countryId = $this->resolveCountryId(trim($part));
+                if ($countryId === null) {
+                    continue;
+                }
+                $stmt->execute([':agreement_id' => $this->agreementId, ':country_id' => $countryId]);
+            }
         }
     }
 
@@ -161,7 +154,11 @@ final class SimpleBilateralHandler
 
     private function loadSheet(array $sheetConfig): int
     {
-        $filePath = __DIR__ . '/../../data/AGREEMENT_MODULES_29/' . $this->config['agreement']['source_workbook'];
+        // Per-sheet source_workbook override (needed for the 5 EAEU
+        // configs sharing one shape but 5 real files); falls back to
+        // the agreement-level source_workbook otherwise.
+        $workbookName = $sheetConfig['source_workbook'] ?? $this->config['agreement']['source_workbook'];
+        $filePath = __DIR__ . '/../../data/AGREEMENT_MODULES_29/' . $workbookName;
 
         if (!file_exists($filePath)) {
             throw new \RuntimeException("Workbook not found: {$filePath}");
@@ -175,18 +172,25 @@ final class SimpleBilateralHandler
         }
 
         $cols = $sheetConfig['columns'];
+        $unmapped = $sheetConfig['unmapped_columns'] ?? [];
         $headerRow = $sheetConfig['header_row'];
         $highestRow = $sheet->getHighestRow();
 
-        $importCountryId = $this->resolveCountryId($sheetConfig['import_country']);
+        // Single granting country for this sheet (may itself be a
+        // "A/B" bloc string like Switzerland/Liechtenstein — stored
+        // as-is on tariff_lines since it's a single import_country_id
+        // slot; the split only matters for agreement_members above).
+        $importCountryId = $this->resolveCountryId(
+            trim(explode('/', $sheetConfig['import_country'])[0])
+        );
 
         $insertLine = $this->pdo->prepare(
             "INSERT INTO tariff_lines
                 (agreement_id, import_country_id, hs_code_raw, hs_code_norm, hs_digits, hs6,
-                 product_desc, mfn_kind, mfn_value, mfn_text, mfn_meaning, remarks, source_reference)
+                 product_desc, mfn_kind, mfn_value, mfn_text, mfn_meaning, is_excluded, remarks, source_reference)
              VALUES
                 (:agreement_id, :import_country_id, :hs_code_raw, :hs_code_norm, :hs_digits, :hs6,
-                 :product_desc, :mfn_kind, :mfn_value, :mfn_text, 'base_at_negotiation', :remarks, :source_reference)"
+                 :product_desc, :mfn_kind, :mfn_value, :mfn_text, 'base_at_negotiation', :is_excluded, :remarks, :source_reference)"
         );
 
         $insertRate = $this->pdo->prepare(
@@ -204,7 +208,7 @@ final class SimpleBilateralHandler
             $hsCodeRaw = (string) $sheet->getCell($cols['hs_code'] . $row)->getValue();
 
             if (trim($hsCodeRaw) === '') {
-                continue; // genuinely blank row, not an error
+                continue;
             }
 
             $hs = HsCode::normalize($hsCodeRaw);
@@ -218,14 +222,25 @@ final class SimpleBilateralHandler
             $mfnCellRaw  = $cols['mfn_rate'] ? (string) $sheet->getCell($cols['mfn_rate'] . $row)->getValue() : null;
             $prefCellRaw = $cols['preferential_rate'] ? (string) $sheet->getCell($cols['preferential_rate'] . $row)->getValue() : null;
             $advCellRaw  = $cols['tariff_advantage'] ? (string) $sheet->getCell($cols['tariff_advantage'] . $row)->getValue() : null;
-            $remarks     = $cols['remarks'] ? (string) $sheet->getCell($cols['remarks'] . $row)->getValue() : null;
+            $exclusionRaw = $cols['exclusion_flag'] ? (string) $sheet->getCell($cols['exclusion_flag'] . $row)->getValue() : null;
+            $remarks     = $cols['remarks'] ? (string) $sheet->getCell($cols['remarks'] . $row)->getValue() : '';
             $sourceRef   = $cols['source_reference'] ? (string) $sheet->getCell($cols['source_reference'] . $row)->getValue() : null;
 
-            $decimalFraction = $this->config['rate_parsing']['decimal_fraction_convention'] ?? false;
+            // Unmapped-column policy: append every flagged column's value
+            // into remarks, labeled with its original header, so nothing
+            // from the sheet is ever silently dropped.
+            foreach ($unmapped as $col) {
+                $value = trim((string) $sheet->getCell($col['letter'] . $row)->getValue());
+                if ($value !== '') {
+                    $remarks .= ($remarks !== '' ? ' | ' : '') . "{$col['label']}: {$value}";
+                }
+            }
 
-            $mfnParsed = RateParser::parse($mfnCellRaw, $decimalFraction);
-            $prefParsed = RateParser::parse($prefCellRaw, $decimalFraction);
-            $advParsed = RateParser::parse($advCellRaw, $decimalFraction);
+            $isExcluded = $exclusionRaw !== null && trim($exclusionRaw) !== '' && strtolower(trim($exclusionRaw)) !== 'no';
+
+            $mfnParsed = RateParser::parse($mfnCellRaw);
+            $prefParsed = RateParser::parse($prefCellRaw);
+            $advParsed = RateParser::parse($advCellRaw);
 
             $insertLine->execute([
                 ':agreement_id'      => $this->agreementId,
@@ -238,27 +253,31 @@ final class SimpleBilateralHandler
                 ':mfn_kind'          => $mfnParsed['rate_kind'],
                 ':mfn_value'         => $mfnParsed['rate_value'],
                 ':mfn_text'          => $mfnParsed['rate_text'],
-                ':remarks'           => $remarks ?: null,
+                ':is_excluded'       => $isExcluded ? 1 : 0,
+                ':remarks'           => $remarks !== '' ? $remarks : null,
                 ':source_reference'  => $sourceRef ?: null,
             ]);
 
             $lineId = (int) $this->pdo->lastInsertId();
 
             $insertRate->execute([
-                ':tariff_line_id'       => $lineId,
-                ':rate_kind'            => $prefParsed['rate_kind'],
-                ':rate_value'           => $prefParsed['rate_value'],
-                ':rate_text'            => $prefParsed['rate_text'],
-                ':effective_advalorem'  => $prefParsed['effective_advalorem'],
-                ':advantage_value'      => $advParsed['rate_value'],
-                ':advantage_text'       => $advParsed['rate_text'],
+                ':tariff_line_id'      => $lineId,
+                ':rate_kind'           => $prefParsed['rate_kind'],
+                ':rate_value'          => $prefParsed['rate_value'],
+                ':rate_text'           => $prefParsed['rate_text'],
+                ':effective_advalorem' => $prefParsed['effective_advalorem'],
+                ':advantage_value'     => $advParsed['rate_value'],
+                ':advantage_text'      => $advParsed['rate_text'],
             ]);
 
             $loaded++;
         }
 
-        // Same memory-release reasoning as TextRateHandler — critical
-        // for --all mode processing many large Excel files in one run.
+        // Explicitly release the loaded workbook from memory before
+        // moving to the next sheet/module. Without this, --all mode
+        // (which processes many multi-megabyte Excel files in one PHP
+        // process) accumulates memory across every file and eventually
+        // exhausts even a generous memory_limit.
         $spreadsheet->disconnectWorksheets();
         unset($spreadsheet, $sheet);
         gc_collect_cycles();

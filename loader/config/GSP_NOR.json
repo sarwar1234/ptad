@@ -1,18 +1,43 @@
 {
   "agreement": {
-    "code": "NOR_GSP", "short_name": "Norway GSP (Pakistan)",
-    "full_name": "Norway Generalised System of Preferences - Pakistan", "type": "GSP",
+    "code": "NOR_GSP",
+    "short_name": "Norway GSP (Pakistan)",
+    "full_name": "Norway Generalised System of Preferences - Pakistan",
+    "type": "GSP",
     "source_workbook": "GSP_NOR_S.xlsx",
-    "list_type": "positive", "coverage": "partial", "staging": "none",
-    "anniversary_month": null, "anniversary_day": null,
-    "entry_into_force": null, "staging_horizon_yrs": null, "default_ceiling_pct": null
+    "list_type": "positive",
+    "coverage": "partial",
+    "staging": "none",
+    "anniversary_month": null,
+    "anniversary_day": null,
+    "entry_into_force": null,
+    "staging_horizon_yrs": null,
+    "default_ceiling_pct": null
   },
   "format_family": "text_rate",
   "tariff_sheets": [
-    { "sheet_name": "Tariff Guidance", "header_row": 10,
-      "import_country": "Norway", "member_country": null,
-      "columns": {"line_no":null,"hs_code":"A","description":"B","mfn_rate":"C","preferential_rate":"D","tariff_advantage":"E","exclusion_flag":null,"remarks":null,"source_reference":null,
-        "_extra_note":"Column F 'Norway GSP Treatment Basis' - same open pattern as other treatment-basis columns across modules (UK/AUS/JPN)."}
+    {
+      "sheet_name": "Tariff Guidance",
+      "header_row": 10,
+      "import_country": "Norway",
+      "member_country": null,
+      "columns": {
+        "line_no": null,
+        "hs_code": "A",
+        "description": "B",
+        "mfn_rate": "C",
+        "preferential_rate": "D",
+        "tariff_advantage": "E",
+        "exclusion_flag": null,
+        "remarks": null,
+        "source_reference": null
+      },
+      "unmapped_columns": [
+        {
+          "letter": "F",
+          "label": "Norway GSP Treatment Basis"
+        }
+      ]
     }
   ],
   "notes": "CORRECTION to earlier assumption in this conversation: Norway also has real tariff-line data (9,557 rows in 'Tariff Guidance' sheet, header row 10) - NOT purely a links-only/guidance-text module as I initially characterized before direct inspection. Row 6 confirms scheme-defined rules (industrial Ch 25-97 duty-free except List 7; agricultural Ch 01-24 per Lists 2-6) drove the Base_Rate/Preferential_Rate text, which is itself DESCRIPTIVE TEXT, not clean numbers (e.g. 'Line-specific MFN agricultural rate...', 'No ordinary-GSP reduction listed...') - RateParser will correctly fall to text_only/unspecified for nearly all rows here since there are no bare percentages in the sample seen. coverage='partial' per row 6's explicit statement that exact numerical MFN amounts must still be confirmed on live Tolltariffen. There is also a separate 'Tariff Data Completion Notes' hidden sheet (found in the original deep scan) not yet inspected for content - and a 'Norway Links' sheet for verification_links, deferred to a later loading step."
