@@ -27,6 +27,7 @@ use PtadLoader\Support\ModuleConfig;
 use PtadLoader\Handlers\SimpleBilateralHandler;
 use PtadLoader\Handlers\TextRateHandler;
 use PtadLoader\Handlers\MultiCountryLdcHandler;
+use PtadLoader\Handlers\PhasedCalendarYearHandler;
 
 if (php_sapi_name() !== 'cli') {
     http_response_code(403);
@@ -137,6 +138,7 @@ function runModule(string $moduleCode): array
         'simple_bilateral' => new SimpleBilateralHandler($moduleCode, $config),
         'text_rate' => new TextRateHandler($moduleCode, $config),
         'multi_country_ldc' => new MultiCountryLdcHandler($moduleCode, $config),
+        'phased_calendar_year' => new PhasedCalendarYearHandler($moduleCode, $config),
         default => throw new \RuntimeException("No handler implemented yet for format_family '{$family}' (module {$moduleCode})."),
     };
 
