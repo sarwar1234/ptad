@@ -28,6 +28,7 @@ use PtadLoader\Handlers\SimpleBilateralHandler;
 use PtadLoader\Handlers\TextRateHandler;
 use PtadLoader\Handlers\MultiCountryLdcHandler;
 use PtadLoader\Handlers\PhasedCalendarYearHandler;
+use PtadLoader\Handlers\SelectiveConcessionHandler;
 
 if (php_sapi_name() !== 'cli') {
     http_response_code(403);
@@ -139,6 +140,7 @@ function runModule(string $moduleCode): array
         'text_rate' => new TextRateHandler($moduleCode, $config),
         'multi_country_ldc' => new MultiCountryLdcHandler($moduleCode, $config),
         'phased_calendar_year' => new PhasedCalendarYearHandler($moduleCode, $config),
+        'selective_concession' => new SelectiveConcessionHandler($moduleCode, $config),
         default => throw new \RuntimeException("No handler implemented yet for format_family '{$family}' (module {$moduleCode})."),
     };
 
