@@ -1,11 +1,18 @@
 {
   "agreement": {
-    "code": "SAPTA", "short_name": "SAARC Preferential Trading Arrangement (SAPTA)",
-    "full_name": "Agreement on SAARC Preferential Trading Arrangement", "type": "RTA",
+    "code": "SAPTA",
+    "short_name": "SAARC Preferential Trading Arrangement (SAPTA)",
+    "full_name": "Agreement on SAARC Preferential Trading Arrangement",
+    "type": "RTA",
     "source_workbook": "RTA_SAPTA_S.xlsx",
-    "list_type": "positive", "coverage": "full", "staging": "none",
-    "anniversary_month": null, "anniversary_day": null,
-    "entry_into_force": null, "staging_horizon_yrs": null, "default_ceiling_pct": null
+    "list_type": "positive",
+    "coverage": "full",
+    "staging": "none",
+    "anniversary_month": null,
+    "anniversary_day": null,
+    "entry_into_force": null,
+    "staging_horizon_yrs": null,
+    "default_ceiling_pct": null
   },
   "format_family": "multi_country_ldc",
   "tariff_sheets": [
@@ -15,16 +22,21 @@
       "import_country": null,
       "member_country": "READ PER-ROW from column D (Country)",
       "columns": {
-        "line_no": "A", "hs_code": "B", "description": "C", "member_country_col": "D",
+        "line_no": "A",
+        "hs_code": "B",
+        "description": "C",
+        "member_country_col": "D",
         "mfn_rate": "E",
         "preferential_rate_non_ldc": "F",
         "preferential_rate_ldc": "G",
         "tariff_advantage_non_ldc": "H",
         "tariff_advantage_ldc": "I",
         "exclusion_flag": null,
-        "remarks": "J", "source_reference": null
-      }
+        "remarks": "J",
+        "source_reference": null
+      },
+      "sheet_shape": "flat_single_header"
     }
   ],
-  "notes": "CONFIRMED — this file has the genuine dual LDC/non-LDC column split described in the Loader Spec's 'Multi-country LDC/non-LDC' family (SAPTA/GSTP/PTN) — TWO separate tariff_rates rows should be created per line, one condition='non_ldc' from column F, one condition='ldc' from column G, per schema Section 5's design. Confirmed row 10 example: NLDC_Preferential_Rate is blank/None while LDC_Preferential_Rate=0 with remark 'LDC concession only' — meaning some lines are LDC-exclusive with no non-LDC concession at all (loader should create ONLY the ldc-condition rate row for such lines, not fabricate a non-existent non-LDC row). HS codes here ARE proper dotted HS format ('0301.91.10'), unlike GSTP/PTN's historical codes — standard HsCode::normalize() handling applies cleanly."
+  "notes": "CONFIRMED \u2014 this file has the genuine dual LDC/non-LDC column split described in the Loader Spec's 'Multi-country LDC/non-LDC' family (SAPTA/GSTP/PTN) \u2014 TWO separate tariff_rates rows should be created per line, one condition='non_ldc' from column F, one condition='ldc' from column G, per schema Section 5's design. Confirmed row 10 example: NLDC_Preferential_Rate is blank/None while LDC_Preferential_Rate=0 with remark 'LDC concession only' \u2014 meaning some lines are LDC-exclusive with no non-LDC concession at all (loader should create ONLY the ldc-condition rate row for such lines, not fabricate a non-existent non-LDC row). HS codes here ARE proper dotted HS format ('0301.91.10'), unlike GSTP/PTN's historical codes \u2014 standard HsCode::normalize() handling applies cleanly."
 }
