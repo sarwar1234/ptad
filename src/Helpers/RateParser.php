@@ -80,6 +80,21 @@ final class RateParser
     {
         $text = trim((string) $rawCell);
 
+        // Normalize European/Turkish-locale comma decimals to periods
+        // BEFORE any other check. Confirmed by direct inspection: the
+        // Türkiye PTA workbook's AFL/RD and ACD columns use a comma as
+        // the decimal separator (e.g. "11,5%", "0,00") rather than the
+        // period used everywhere else in the project's source files.
+        // Without this normalization, "11,5%" was being misread as if
+        // "5%" were the whole number (regex matching only the fragment
+        // after the comma), silently corrupting the value rather than
+        // just leaving it unparsed — this fixes that at the source,
+        // before the rest of the parsing logic ever sees the string.
+        // Pattern requires digit-comma-digit immediately before a '%'
+        // or end of string, so it won't misfire on an unrelated comma
+        // used as a genuine list separator elsewhere in a cell.
+        $text = preg_replace('/(\d),(\d+)(?=\s*%|\s*$)/', '$1.$2', $text);
+
         // --- Blank cell: genuinely unknown, not a stated zero. ---
         if ($text === '') {
             return self::result('unspecified', null, null, null);
