@@ -1,25 +1,60 @@
 {
   "agreement": {
-    "code": "GSP_KGZ", "short_name": "EAEU Unified Scheme of Tariff Preferences (Kyrgyzstan)",
-    "full_name": "EAEU Unified System of Tariff Preferences (USTP) - Kyrgyzstan", "type": "GSP",
+    "code": "GSP_KGZ",
+    "short_name": "EAEU Unified Scheme of Tariff Preferences (Kyrgyzstan)",
+    "full_name": "EAEU Unified System of Tariff Preferences (USTP) - Kyrgyzstan",
+    "type": "GSP",
     "source_workbook": "GSP_KGZ_S.xlsx",
-    "list_type": "positive", "coverage": "full", "staging": "none",
-    "anniversary_month": null, "anniversary_day": null,
-    "entry_into_force": null, "staging_horizon_yrs": null, "default_ceiling_pct": null
+    "list_type": "positive",
+    "coverage": "full",
+    "staging": "none",
+    "anniversary_month": null,
+    "anniversary_day": null,
+    "entry_into_force": null,
+    "staging_horizon_yrs": null,
+    "default_ceiling_pct": null
   },
   "format_family": "text_rate",
   "notes_before_sheets": "Per Module Register: Russia, Armenia, Belarus, Kazakhstan, Kyrgyzstan share ONE module (identical English-language template/guidance content), but are 5 SEPARATE workbooks with their own tariff data - loaded as 5 separate agreements accordingly, not one combined record, since each may carry different rates per country even on a shared template.",
   "tariff_sheets": [
-    { "sheet_name": "Tariff Preferences", "header_row": 10,
-      "import_country": "Kyrgyzstan", "member_country": null,
-      "columns": {"line_no":null,"hs_code":"A","description":"C","mfn_rate":"F","preferential_rate":"H","tariff_advantage":null,"exclusion_flag":null,"remarks":null,"source_reference":null},
+    {
+      "sheet_name": "Tariff Preferences",
+      "header_row": 10,
+      "import_country": "Kyrgyzstan",
+      "member_country": null,
+      "columns": {
+        "line_no": null,
+        "hs_code": "A",
+        "description": "C",
+        "mfn_rate": "F",
+        "preferential_rate": "H",
+        "tariff_advantage": null,
+        "exclusion_flag": null,
+        "remarks": null,
+        "source_reference": null
+      },
       "unmapped_columns": [
-        {"letter": "B", "label": "HS Formatted"},
-        {"letter": "D", "label": "Product Description (Russian source)"},
-        {"letter": "E", "label": "UOM"},
-        {"letter": "G", "label": "Pakistan USTP Eligibility"}
+        {
+          "letter": "B",
+          "label": "HS Formatted"
+        },
+        {
+          "letter": "D",
+          "label": "Product Description (Russian source)"
+        },
+        {
+          "letter": "E",
+          "label": "UOM"
+        },
+        {
+          "letter": "G",
+          "label": "Pakistan USTP Eligibility"
+        }
       ]
     }
   ],
-  "notes": "Eligible Goods List sheet (coverage_rules source) exists in this workbook but is not loaded by this handler - deferred to a future coverage_rules loading step. All 4 unmapped columns are now captured via unmapped_columns and appended into remarks by TextRateHandler, per the Unmapped Column Policy - nothing from this sheet is discarded."
+  "notes": "Eligible Goods List sheet (coverage_rules source) exists in this workbook but is not loaded by this handler - deferred to a future coverage_rules loading step. All 4 unmapped columns are now captured via unmapped_columns and appended into remarks by TextRateHandler, per the Unmapped Column Policy - nothing from this sheet is discarded. CORRECTED (Gap #3 fix): the source workbook's Preferential_Rate column is a live, uncalculated Excel formula that stored as raw formula text, not a value \u2014 the loader now computes the same 75%-of-MFN-when-eligible result directly instead, verified against real data.",
+  "rate_parsing": {
+    "computed_rate_formula": "mfn_times_75_if_eligible"
+  }
 }

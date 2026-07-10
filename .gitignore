@@ -39,3 +39,7 @@ composer.phar
 *.bak
 *.tmp
 *~
+
+# --- Runtime-generated files (rate limiter tracking) ---
+/storage/rate_limit/*
+!/storage/rate_limit/.gitkeep

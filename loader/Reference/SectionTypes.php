@@ -168,6 +168,7 @@ final class SectionTypes
 
         // verification_links (one per granting country, single-file each)
         'Canada Links'                 => 'verification_links',
+        'Tariff Verification Links'    => 'verification_links', // New Zealand's GSP module - found during content sections loader testing
         'EU Links'                     => 'verification_links',
         'Norway Links'                 => 'verification_links',
         'Türkiye Links'                => 'verification_links',

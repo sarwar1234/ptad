@@ -120,10 +120,85 @@ if (in_array('--all', $args, true)) {
     exit(count($failed) > 0 ? 1 : 0);
 }
 
+if (in_array('--dedupe-remarks', $args, true)) {
+    echo "Deduplicating staging remarks into staging_remarks table...\n\n";
+    $dedup = new \PtadLoader\StagingRemarksDeduplicator();
+    $results = $dedup->run();
+    $totalDistinct = 0;
+    $totalLinked = 0;
+    foreach ($results as $code => $r) {
+        echo "  {$code}: {$r['distinct_remarks']} distinct remarks, {$r['lines_linked']} lines linked\n";
+        $totalDistinct += $r['distinct_remarks'];
+        $totalLinked += $r['lines_linked'];
+    }
+    echo "\nTotal: {$totalDistinct} distinct remarks, {$totalLinked} lines linked.\n";
+    exit(0);
+}
+
+if (in_array('--validate-advantage', $args, true)) {
+    $validator = new \PtadLoader\AdvantageValidator();
+    $validator->report();
+    exit(0);
+}
+
+if (in_array('--quota-notes', $args, true)) {
+    echo "Extracting quota/season notes from remarks text...\n\n";
+
+    $extractor = new \PtadLoader\QuotaNoteExtractor();
+    $result = $extractor->run();
+
+    echo "  Lines updated: {$result['lines_updated']}\n";
+    echo "  Quota matches: {$result['quota_matches']}\n";
+    echo "  Season matches: {$result['season_matches']}\n";
+    exit(0);
+}
+
+if (in_array('--coverage-rules', $args, true)) {
+    echo "Loading coverage rules (EAEU modules only)...\n\n";
+
+    $loader = new \PtadLoader\CoverageRulesLoader();
+    $result = $loader->loadAll();
+    $loader->closeLog();
+
+    foreach ($result['per_module'] as $code => $status) {
+        echo "  {$code}: {$status}\n";
+    }
+    echo "\nTotal: {$result['total']} coverage rules loaded.\n";
+    exit(0);
+}
+
+if (in_array('--sections', $args, true)) {
+    echo "Loading content sections + verification links for all agreements...\n\n";
+
+    $pdo = \Ptad\Database\Connection::get();
+    $agreements = $pdo->query("SELECT id, code, source_workbook FROM agreements ORDER BY code")->fetchAll();
+
+    $loader = new \PtadLoader\ContentSectionsLoader();
+    $totalSections = 0;
+    $totalLinks = 0;
+
+    foreach ($agreements as $a) {
+        try {
+            $result = $loader->loadForModule($a['code'], $a['source_workbook'], (int) $a['id']);
+            echo "  {$a['code']}: {$result['sections_loaded']} sections, {$result['links_loaded']} links\n";
+            $totalSections += $result['sections_loaded'];
+            $totalLinks += $result['links_loaded'];
+        } catch (\Throwable $e) {
+            echo "  {$a['code']}: ERROR — " . $e->getMessage() . "\n";
+        }
+    }
+
+    $loader->closeLog();
+
+    echo "\nTotal: {$totalSections} sections, {$totalLinks} verification links loaded.\n";
+    exit(0);
+}
+
 echo "Usage:\n";
 echo "  php loader/run.php --reference        Load countries + section_types\n";
 echo "  php loader/run.php --module CODE      Load one module (e.g. IRN_PAK)\n";
 echo "  php loader/run.php --all              Load every module with a working handler, skip the rest\n";
+echo "  php loader/run.php --sections          Load content sections + verification links for all agreements\n";
 exit(1);
 
 /**

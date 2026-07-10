@@ -6,7 +6,7 @@
     "type": "GSP",
     "source_workbook": "GSP_UK_S.xlsx",
     "list_type": "positive",
-    "coverage": "full",
+    "coverage": "partial",
     "staging": "none",
     "anniversary_month": null,
     "anniversary_day": null,

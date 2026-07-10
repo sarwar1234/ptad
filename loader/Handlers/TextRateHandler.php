@@ -239,8 +239,54 @@ final class TextRateHandler
             $isExcluded = $exclusionRaw !== null && trim($exclusionRaw) !== '' && strtolower(trim($exclusionRaw)) !== 'no';
 
             $mfnParsed = RateParser::parse($mfnCellRaw);
-            $prefParsed = RateParser::parse($prefCellRaw);
             $advParsed = RateParser::parse($advCellRaw);
+
+            // BUG FOUND during Gap #3 review: the "preferential_rate"
+            // cell in the 5 EAEU modules is a LIVE, uncalculated Excel
+            // formula (confirmed: ALL rows across all 5 modules stored
+            // the raw formula string, e.g. "=IF($G11=...)", with
+            // resulting rate_value=NULL for every single row — a real,
+            // previously undetected correctness gap, not just a
+            // cosmetic remarks issue).
+            //
+            // The formula's own logic is simple and safely
+            // reproducible directly: 75% of the MFN rate when the
+            // "Pakistan USTP Eligibility" column (already captured in
+            // $remarks via the unmapped-column policy) says eligible,
+            // otherwise no preference. Rather than attempt to evaluate
+            // the fragile original formula, this computes the same
+            // result directly from data we already have and trust.
+            $computedRateFormula = $this->config['rate_parsing']['computed_rate_formula'] ?? null;
+
+            if ($computedRateFormula === 'mfn_times_75_if_eligible') {
+                $isEligible = str_contains($remarks, 'Eligible for Pakistan');
+
+                if (!$isEligible) {
+                    $prefParsed = [
+                        'rate_kind' => 'excluded', 'rate_value' => null,
+                        'rate_text' => 'No USTP preference (not on eligible-goods list for Pakistan)',
+                        'effective_advalorem' => null,
+                    ];
+                } elseif ($mfnParsed['rate_value'] !== null) {
+                    $computed = round($mfnParsed['rate_value'] * 0.75, 4);
+                    $prefParsed = [
+                        'rate_kind' => 'ad_valorem', 'rate_value' => $computed,
+                        'rate_text' => "{$computed}% (computed: 75% of {$mfnParsed['rate_value']}% MFN rate, per EAEU USTP formula)",
+                        'effective_advalorem' => $computed,
+                    ];
+                } else {
+                    // Eligible, but MFN itself isn't a clean number to
+                    // compute 75% of (e.g. a specific duty) — don't
+                    // fabricate a percentage from a non-percentage base.
+                    $prefParsed = [
+                        'rate_kind' => 'text_only', 'rate_value' => null,
+                        'rate_text' => '75% of MFN/CCT duty rate (MFN is not a plain percentage — verify source-specific duty)',
+                        'effective_advalorem' => null,
+                    ];
+                }
+            } else {
+                $prefParsed = RateParser::parse($prefCellRaw);
+            }
 
             $insertLine->execute([
                 ':agreement_id'      => $this->agreementId,

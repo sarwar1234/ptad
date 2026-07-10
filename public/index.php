@@ -2,27 +2,19 @@
 
 declare(strict_types=1);
 
-/**
- * ============================================================
- * PTAD — Front Controller
- * ============================================================
- * Every web request that isn't a static asset lands here
- * (see public/.htaccess RewriteRule).
- *
- * At this stage (Step 3), this file proves the database
- * connection works end-to-end alongside the Step 2 bootstrap.
- * A real router will replace this placeholder response later.
- * ============================================================
- */
-
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Ptad\Config;
-use Ptad\Database\Connection;
+use Ptad\Api\Router;
+use Ptad\Api\ApiResponse;
+use Ptad\Api\RateLimiter;
+use Ptad\Api\Controllers\PingController;
+use Ptad\Api\Controllers\SearchController;
+use Ptad\Api\Controllers\CountryController;
+use Ptad\Api\Controllers\ModuleController;
 
-$config = Config::load();
+Config::load();
 
-// --- Environment-aware error display ---
 if (Config::isProduction()) {
     ini_set('display_errors', '0');
     error_reporting(0);
@@ -33,26 +25,57 @@ if (Config::isProduction()) {
 
 date_default_timezone_set((string) Config::get('app.timezone', 'UTC'));
 
-// --- Test the database connection and count tables as a sanity check ---
-$dbStatus = 'not tested';
-$tableCount = null;
+$path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH) ?: '/';
+$method = $_SERVER['REQUEST_METHOD'];
 
-try {
-    $pdo = Connection::get();
-    $stmt = $pdo->query("SHOW TABLES");
-    $tableCount = $stmt->rowCount();
-    $dbStatus = 'connected';
-} catch (\Throwable $e) {
-    $dbStatus = 'error: ' . $e->getMessage();
+if (str_starts_with($path, '/api/')) {
+    // Rate limiting applies to every API request, before routing.
+    // 60 requests per 60 seconds per IP — generous for real usage,
+    // enough to blunt casual scraping/abuse of a free public API.
+    $limiter = new RateLimiter();
+    $result = $limiter->check(RateLimiter::clientIp(), 60, 60);
+
+    header('X-RateLimit-Remaining: ' . $result['remaining']);
+
+    if (!$result['allowed']) {
+        header('Retry-After: ' . $result['retry_after_seconds']);
+        ApiResponse::error(
+            'rate_limited',
+            "Too many requests. Please try again in {$result['retry_after_seconds']} seconds.",
+            429
+        );
+        exit;
+    }
+
+    $router = new Router();
+
+    $router->get('/api/ping', [PingController::class, 'handle']);
+    $router->get('/api/search', [SearchController::class, 'handle']);
+    $router->get('/api/search-description', [SearchController::class, 'handleDescriptionSearch']);
+    $router->get('/api/compare', [SearchController::class, 'handleCompare']);
+    $router->get('/api/countries', [CountryController::class, 'listCountries']);
+    $router->get('/api/countries/{name}/agreements', [CountryController::class, 'agreementsForCountry']);
+    $router->get('/api/modules', [ModuleController::class, 'listModules']);
+    $router->get('/api/modules/{code}', [ModuleController::class, 'moduleDetail']);
+
+    $router->dispatch($method, $path);
+    exit;
 }
 
-// --- Temporary placeholder response (proves the pipeline works) ---
-// This will be replaced by a real router in a later step.
-header('Content-Type: application/json; charset=utf-8');
-echo json_encode([
-    'app'          => Config::get('app.name'),
-    'environment'  => Config::get('env'),
-    'status'       => 'Step 3 bootstrap OK',
-    'database'     => $dbStatus,
-    'table_count'  => $tableCount,
-], JSON_PRETTY_PRINT);
+// --- Frontend pages ---
+if ($path === '/' || $path === '') {
+    require __DIR__ . '/pages/home.php';
+    exit;
+}
+if ($path === '/search') {
+    require __DIR__ . '/pages/search.php';
+    exit;
+}
+if (preg_match('#^/modules/([A-Za-z0-9_]+)$#', $path, $m)) {
+    $_GET['code'] = $m[1];
+    require __DIR__ . '/pages/module.php';
+    exit;
+}
+
+http_response_code(404);
+echo '404 — page not found';

@@ -241,7 +241,22 @@ final class PhasedMultiComponentHandler
         }
 
         $description = (string) $sheet->getCell($cols['description'] . $row)->getValue();
-        $remarks = $cols['remarks'] ? (string) $sheet->getCell($cols['remarks'] . $row)->getValue() : null;
+            // BUG FOUND during Gap #3 review: this column is a LIVE
+            // Excel formula (an interactive date-selector display,
+            // dependent on other helper cells), not static text.
+            // ->getValue() returns the raw, unevaluated formula string
+            // ("=IF($B$4=...)") rather than real text — confirmed
+            // present in ALL 412 lines across both Türkiye-side and
+            // Pakistan-side sheets. Rather than attempt to evaluate
+            // this fragile, interactive formula (which depends on a
+            // date-picker helper cell with no fixed value), remarks
+            // is set to NULL when the cell is a formula — the actual
+            // information it would have displayed (CD/RD/ACD rates
+            // per year) is ALREADY correctly captured in tariff_rates,
+            // so nothing is genuinely lost by not storing this
+            // duplicate, un-evaluatable display string.
+            $remarksRaw = $cols['remarks'] ? (string) $sheet->getCell($cols['remarks'] . $row)->getValue() : null;
+            $remarks = ($remarksRaw !== null && str_starts_with(trim($remarksRaw), '=')) ? null : $remarksRaw;
 
         $insertLine->execute([
             ':agreement_id'      => $this->agreementId,
