@@ -71,6 +71,14 @@ if ($path === '/search') {
     require __DIR__ . '/pages/search.php';
     exit;
 }
+if ($path === '/countries') {
+    require __DIR__ . '/pages/countries.php';
+    exit;
+}
+if ($path === '/modules') {
+    require __DIR__ . '/pages/all-modules.php';
+    exit;
+}
 if (preg_match('#^/modules/([A-Za-z0-9_]+)$#', $path, $m)) {
     $_GET['code'] = $m[1];
     require __DIR__ . '/pages/module.php';

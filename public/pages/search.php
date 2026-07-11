@@ -43,7 +43,7 @@ include __DIR__ . '/../partials/head.php';
             </select>
         </div>
     </div>
-    <div id="resultsContainer" class="row g-3">
+    <div id="resultsContainer">
         <div class="ptad-skeleton" style="height:90px;" class="mb-3"></div>
     </div>
     <div id="paginationContainer" class="d-flex justify-content-center align-items-center flex-wrap gap-2 mt-4"></div>
@@ -52,4 +52,5 @@ include __DIR__ . '/../partials/head.php';
 
 <?php include __DIR__ . '/../partials/footer.php'; ?>
 
+<script src="/assets/js/flags.js"></script>
 <script src="/assets/js/search.js"></script>

@@ -25,4 +25,5 @@ include __DIR__ . '/../partials/head.php';
 
 <?php include __DIR__ . '/../partials/footer.php'; ?>
 
+<script src="/assets/js/flags.js"></script>
 <script src="/assets/js/module.js"></script>

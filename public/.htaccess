@@ -43,7 +43,7 @@ ServerSignature Off
     # Bootstrap's CSS/JS entirely — confirmed the cause of a real
     # layout bug (grid/flex system never loading, only our own
     # custom CSS applying) found during frontend testing.
-    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; object-src 'none'; base-uri 'self'; frame-ancestors 'none';"
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https://flagcdn.com; object-src 'none'; base-uri 'self'; frame-ancestors 'none';"
 
     # HSTS — only meaningful over HTTPS (harmless locally over HTTP; will matter in production)
     Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"

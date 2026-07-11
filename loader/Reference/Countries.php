@@ -129,7 +129,7 @@ final class Countries
 
         // --- PTN-specific ---
         'Israel'            => ['IL', 'ISR', false, null],
-        'Serbia'            => [null, null, false, 'PTN sheet showed "Serbia (successor reference: Yugoslavia schedule)" - stored under canonical modern name; historical note preserved in agreements/coverage_rules notes field where the loader encounters it, not here.'],
+        'Serbia'            => ['RS', 'SRB', false, 'PTN sheet showed "Serbia (successor reference: Yugoslavia schedule)" - stored under canonical modern name. ISO codes added (RS/SRB, standard current codes) - originally left null pending verification, confirmed safe to fill in since Serbia is a real, current, unambiguous country.'],
     ];
 
     /**

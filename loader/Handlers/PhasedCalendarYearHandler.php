@@ -133,10 +133,19 @@ final class PhasedCalendarYearHandler
         $stmt = $this->pdo->prepare($sql);
 
         foreach ($this->config['tariff_sheets'] as $sheet) {
-            if (empty($sheet['member_country'])) {
+            // BUG FOUND during frontend member-count testing: this only
+            // ever checked 'member_country', but China's config (a
+            // two-direction bilateral, not a per-member module like
+            // D-8) uses 'import_country' instead — confirmed real
+            // consequence: China had ZERO rows in agreement_members
+            // despite tariff data loading perfectly for both directions.
+            // Falls back to import_country, matching the same pattern
+            // already used elsewhere in this handler (loadPhasedSheet).
+            $countryName = $sheet['member_country'] ?? $sheet['import_country'] ?? null;
+            if (empty($countryName)) {
                 continue;
             }
-            $countryId = $this->resolveCountryId($sheet['member_country']);
+            $countryId = $this->resolveCountryId($countryName);
             if ($countryId === null) {
                 continue;
             }

@@ -545,6 +545,82 @@ h1, h2, h3, h4, .ptad-headline {
 .ptad-link-card .name { font-weight: 700; color: var(--ptad-navy); font-size: 0.88rem; }
 .ptad-link-card .purpose { font-size: 0.8rem; color: var(--ptad-ink-muted); margin-top: 0.3rem; }
 
+/* ---------- Country Navigator ---------- */
+.ptad-country-list {
+    max-height: 620px;
+    overflow-y: auto;
+    background: var(--ptad-surface);
+    border: 1px solid var(--ptad-line);
+    border-radius: var(--ptad-radius);
+}
+.ptad-country-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--ptad-line);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background 0.1s ease;
+}
+.ptad-country-item:last-child { border-bottom: none; }
+.ptad-country-item:hover { background: var(--ptad-bg); }
+.ptad-country-item.active {
+    background: var(--ptad-teal-light);
+    color: var(--ptad-navy);
+    font-weight: 700;
+}
+.ptad-country-item .ldc-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--ptad-teal);
+    background: var(--ptad-teal-light);
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+}
+
+.ptad-country-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+.ptad-country-header h2 { margin: 0; }
+
+.ptad-agreement-card {
+    background: var(--ptad-surface);
+    border: 1px solid var(--ptad-line);
+    border-left: 4px solid var(--ptad-teal);
+    border-radius: 10px;
+    padding: 1.1rem 1.4rem;
+    margin-bottom: 0.9rem;
+}
+.ptad-agreement-card.not-implemented { border-left-color: var(--ptad-amber-deep); }
+
+/* ---------- All Arrangements list ---------- */
+.ptad-module-row {
+    background: var(--ptad-surface);
+    border: 1px solid var(--ptad-line);
+    border-radius: 10px;
+    padding: 1rem 1.4rem;
+    margin-bottom: 0.7rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: var(--ptad-ink);
+    transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+.ptad-module-row:hover {
+    border-color: var(--ptad-teal);
+    box-shadow: 0 4px 16px rgba(15,41,66,0.08);
+    color: var(--ptad-ink);
+}
+.ptad-module-row .lines-count { font-weight: 700; color: var(--ptad-navy); font-size: 0.92rem; }
+
 @media (max-width: 767px) {
     .ptad-hero h1 { font-size: 2rem; }
     .ptad-hero { padding: 3rem 0 5rem; }

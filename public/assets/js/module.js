@@ -66,7 +66,7 @@ function renderMembers(members) {
         const notImplemented = m.member_status !== 'implemented';
         return `<div class="col-6 col-md-4 col-lg-3">
             <div class="ptad-member-card ${notImplemented ? 'not-implemented' : ''}">
-                <div class="country">${escapeHtml(m.country)}</div>
+                <div class="country">${flagImg(m.iso2)} ${escapeHtml(m.country)}</div>
                 <div class="role">${escapeHtml(m.role || 'party')}</div>
                 ${notImplemented ? `<div class="status-flag">${escapeHtml(m.member_status.replace('_', ' '))}</div>` : ''}
             </div>

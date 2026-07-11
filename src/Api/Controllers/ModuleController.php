@@ -117,7 +117,7 @@ final class ModuleController
         }
 
         $membersStmt = $pdo->prepare("
-            SELECT c.name AS country, c.iso3, am.role, am.status AS member_status,
+            SELECT c.name AS country, c.iso2, c.iso3, am.role, am.status AS member_status,
                    am.status_note, am.is_ldc_in_agreement, am.member_ceiling_pct
             FROM agreement_members am
             JOIN countries c ON c.id = am.country_id
